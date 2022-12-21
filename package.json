@@ -1,0 +1,21 @@
+{
+  "name": "minecraftserverpinger",
+  "version": "0.0.1",
+  "description": "An epic library to ping minecraft servers in the best way imaginable",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "minecraft",
+    "status"
+  ],
+  "author": "woodendoors7",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "dependencies": {
+    "minecraft-pinger": "^1.0.5",
+    "varint": "^6.0.0"
+  }
+}
+ 
