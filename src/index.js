@@ -1,41 +1,73 @@
 import packetGen from "./packetGenerator.js"
-import packetDecoder from "./packetDecoder.js"
+import packetDec from "./packetDecoder.js"
 import net from "net";
 import varint from "varint"
-async function getServerStatus(options) {
-    let { port, hostname } = options;
 
-    let portal = net.createConnection(port, hostname, async () => {
-        let handshake = await packetGen.craftHandshake(hostname, port);
-        let statusRequest = await packetGen.craftEmptyPacket(0);
-        portal.write(handshake);
-        //let expectData = waitForData(portal);
-        portal.write(statusRequest);
-        //let statusResponse = await expectData;
-        //console.log(statusResponse)
-    })
-
-    let addBuffer = Buffer.alloc(0)
-
-    portal.on("data", async (chunk) => {
-
-        addBuffer = Buffer.concat([addBuffer, chunk])
-
-        let result = await packetDecoder.decodePacket(addBuffer);
-
-        console.log(chunk.toString())
-        //let decodedData = packetDecoder.decodePacket(chunk)
-        //console.log(decodedData)
-    })
-
-}
-
-async function waitForData(portal) {
+async function getServerStatus(options, callbackFunc) {
     return new Promise((resolve, reject) => {
-        portal.on('data', (chunk) => {
-            resolve(chunk);
+        let { hostname, port, timeout } = options;
+
+        if (!hostname) throw new Error("Input Error: No hostname was specified.")
+        if (!port) port = 25565
+        if (!timeout) timeout = 10000;
+        // default port of 25565, default timeout of 10 seconds.
+        let portal = net.createConnection(port, hostname, async () => {
+            let handshake = await packetGen.craftHandshake(hostname, port);
+            let statusRequest = await packetGen.craftEmptyPacket(0);
+            portal.write(handshake);
+            portal.write(statusRequest);
         })
+
+        let packet = packetTemplate
+
+        portal.on("data", async (chunk) => {
+            console.log(chunk.toString())
+            packet = await packetDec.packetPipeline(chunk, packet)
+            if (packet == Error) {
+                portal.destroy()
+                clearTimeout(timeoutFunc)
+                if(packet.message == "MaxBuffer") throw new Error("Memory Leak Warning: Maximum buffer size of 100 Kilobytes reached.\nThe status packet should be smaller than 20 Kilobytes.");
+                if(packet.message == "CorruptPacket") throw new Error("Network Error: Corrupted packet was received.");
+            }
+
+            if (packet.baked) {
+                //portal.destroy();
+                clearTimeout(timeoutFunc)
+                resolve(packet.data)
+            }
+        })
+
+        portal.once("error", (error)=> {
+            clearTimeout(timeoutFunc);
+            throw error 
+        })
+
+        let timeoutFunc = setTimeout(() => {
+            portal.destroy();
+            throw new Error("Timed out.")
+        }, timeout);
+
     })
 }
 
-export default { getServerStatus } 
+
+
+
+let packetTemplate = {
+    baked: false,
+    meta: {
+        metaCrafted: false,
+        fieldsCrafted: false,
+        packetID: null,
+        dataLength: null,
+        fullLength: null,
+        metaLength: null
+    },
+    dataBuffer: Buffer.alloc(0),
+    fieldsBuffer: Buffer.alloc(0),
+    data: null
+}
+
+export default { getServerStatus }
+
+//throw new Error("Memory Leak Warning: Maximum buffer size of 100 Kilobytes reached.\nThe status packet should be smaller than 20 Kilobytes.");

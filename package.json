@@ -1,5 +1,5 @@
 {
-  "name": "minecraftserverpinger",
+  "name": "minecraftstatuspinger",
   "version": "0.0.1",
   "description": "An epic library to ping minecraft servers in the best way imaginable",
   "main": "./src/index.js",

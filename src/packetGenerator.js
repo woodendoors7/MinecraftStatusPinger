@@ -9,7 +9,6 @@ async function craftHandshake(hostname, port) {
     // Field 3: The body of the request
     let packetID = 0;
     let packetLengthBuffer = Buffer.from(varint.encode(varint.encodingLength(packetID) + packetBody.length));
-    console.log(packetLengthBuffer)
     let packetIDBuffer = Buffer.from(varint.encode(packetID));
 
     let craftedHandshake = Buffer.concat([
