@@ -6,6 +6,8 @@ async function packetPipeline(chunk, packet) {
     packet.dataBuffer,
     chunk
   ])
+
+
   if (Buffer.byteLength(packet.dataBuffer) > 102400) return new Error("MaxBuffer")
   if (!packet.meta.packetInitialized) packet = await craftPacketMeta(packet);
   if (packet.dataBuffer.length != packet.meta.fullLength) return packet;

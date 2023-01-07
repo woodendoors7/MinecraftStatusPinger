@@ -1,7 +1,6 @@
 import packetGen from "./packetGenerator.js"
 import packetDec from "./packetDecoder.js"
 import net from "net";
-import varint from "varint"
 
 async function getServerStatus(options, callbackFunc) {
     return new Promise((resolve, reject) => {
@@ -20,26 +19,35 @@ async function getServerStatus(options, callbackFunc) {
 
         let packet = packetTemplate
 
+        let writeOnce = false;
         portal.on("data", async (chunk) => {
+
+            console.log("New packet")
             console.log(chunk.toString())
+            console.log(chunk)
             packet = await packetDec.packetPipeline(chunk, packet)
-            if (packet == Error) {
+            if (packet == Error && !packet.baked) {
                 portal.destroy()
                 clearTimeout(timeoutFunc)
-                if(packet.message == "MaxBuffer") throw new Error("Memory Leak Warning: Maximum buffer size of 100 Kilobytes reached.\nThe status packet should be smaller than 20 Kilobytes.");
-                if(packet.message == "CorruptPacket") throw new Error("Network Error: Corrupted packet was received.");
+                if (packet.message == "MaxBuffer") throw new Error("Memory Leak Warning: Maximum buffer size of 100 Kilobytes reached.\nThe status packet should be smaller than 20 Kilobytes.");
+                if (packet.message == "CorruptPacket") throw new Error("Network Error: Corrupted packet was received.");
             }
 
-            if (packet.baked) {
+
+            if (packet.baked && !writeOnce) {
+                writeOnce = true;
                 //portal.destroy();
                 clearTimeout(timeoutFunc)
                 resolve(packet.data)
+                let pingRequest = await packetGen.craftPingPacket(1)
+                portal.write(pingRequest)
+                console.log("written")
             }
         })
 
-        portal.once("error", (error)=> {
+        portal.once("error", (error) => {
             clearTimeout(timeoutFunc);
-            throw error 
+            throw error
         })
 
         let timeoutFunc = setTimeout(() => {
@@ -70,4 +78,4 @@ let packetTemplate = {
 
 export default { getServerStatus }
 
-//throw new Error("Memory Leak Warning: Maximum buffer size of 100 Kilobytes reached.\nThe status packet should be smaller than 20 Kilobytes.");
+//throw new Error("Memory Leak Warning: Maximum buffer size of 100 Kilobytes reached.\nThe status packet should be smaller than 20 Kilobytes."); 
