@@ -1,7 +1,7 @@
 import varint from "varint"
-import Long from "long";
 const _protocolVersion = 753;
 import Int64 from "node-int64"
+
 
 async function craftHandshake(hostname, port) {
     let packetBody = await craftHandshakeBody(hostname, port);
@@ -52,13 +52,16 @@ async function craftEmptyPacket(packetID) {
 
     let craftedPacket = Buffer.concat([
         packetLengthBuffer,
-        packetIDBuffer,
-
+        packetIDBuffer
     ])
     return craftedPacket;
 }
 
 async function craftPingPacket(packetID) {
+    // Field 1: Length of the entire object, (VarInt)
+    // Field 2: PacketID, (VarInt)
+    // Field 3: Payload, (Long)
+
     let longBuffer = await makeLong(Date.now())
     let packetLengthBuffer = Buffer.from(varint.encode(varint.encodingLength(packetID) + longBuffer.length));
     let packetIDBuffer = Buffer.from(varint.encode(packetID));
@@ -72,8 +75,11 @@ async function craftPingPacket(packetID) {
 }
 
 async function makeLong(timePacket) {
-    let buf = new Int64(timePacket).toBuffer();
-    console.log(buf)
+
+
+    let buf = Buffer.allocUnsafe(8);
+    buf.writeBigInt64BE(BigInt(timePacket))
+
     return buf;
 }
 
