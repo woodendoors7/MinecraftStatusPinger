@@ -1,5 +1,4 @@
 import varint from "varint"
-import Int64 from "node-int64";
 
 async function packetPipeline(chunk, packet) {
   // Wait for and Collect all the data coming from the server.
@@ -18,16 +17,16 @@ async function packetPipeline(chunk, packet) {
 }
 
 async function craftPingResponse(chunk, packet) {
-  // Field 1: Length of the entire object, (VarInt) - the value should always be 09
-  // Field 2: PacketID, (VarInt) - should always be 1 byte long.
-  // Field 3: Payload, (Long) - should always be 8 bytes long.
-  let dataLength = chunk[0]
-  let packetID = chunk[1]
-  if (dataLength != 9 || packetID != 1) throw new Error("Corrupted or non standard ping packet was received.")
-  let pingBuffer = chunk.slice(2)
-  packet.crafted.latency = Date.now() - Number(pingBuffer.readBigInt64BE());
+  /*
+    The same packet we sent to the server should be sent back, however
+    some servers send some kind of non standard string back, therefore,
+    any packet sent by the server after we requested the ping 
+    is counted as the ping response.
+  */
+
+  packet.crafted.latency = Date.now() - packet.status.pingSentTime;
   packet.status.pingBaked = true;
-  return packet
+  return packet;
 }
 
 async function craftData(packet) {

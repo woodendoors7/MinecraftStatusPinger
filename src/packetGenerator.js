@@ -1,6 +1,5 @@
 import varint from "varint"
 const _protocolVersion = 753;
-import Int64 from "node-int64"
 
 
 async function craftHandshake(hostname, port) {
@@ -9,7 +8,8 @@ async function craftHandshake(hostname, port) {
     // Field 1: Length of the entire object, (VarInt)
     // Field 2: PacketID, (VarInt)
     // Field 3: The body of the request
-    let packetID = 0;
+    const packetID = 0;
+    
     let packetLengthBuffer = Buffer.from(varint.encode(varint.encodingLength(packetID) + packetBody.length));
     let packetIDBuffer = Buffer.from(varint.encode(packetID));
 
@@ -57,10 +57,15 @@ async function craftEmptyPacket(packetID) {
     return craftedPacket;
 }
 
-async function craftPingPacket(packetID) {
+async function craftPingPacket() {
     // Field 1: Length of the entire object, (VarInt)
     // Field 2: PacketID, (VarInt)
     // Field 3: Payload, (Long)
+
+    // The payload is the current time, however, it does not matter.
+    // The server should return the same value back, but not all servers do.
+    // The time value is stored in a variable. 
+    const packetID = 1;
 
     let longBuffer = await makeLong(Date.now())
     let packetLengthBuffer = Buffer.from(varint.encode(varint.encodingLength(packetID) + longBuffer.length));
@@ -71,14 +76,13 @@ async function craftPingPacket(packetID) {
         packetIDBuffer,
         longBuffer
     ])
+
     return craftedPacket;
 }
 
-async function makeLong(timePacket) {
-
-
+async function makeLong(longNumber) {
     let buf = Buffer.allocUnsafe(8);
-    buf.writeBigInt64BE(BigInt(timePacket))
+    buf.writeBigInt64BE(BigInt(longNumber))
 
     return buf;
 }

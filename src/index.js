@@ -20,8 +20,10 @@ async function getServerStatus(options) {
 
         let packet = packetTemplate;
         portal.on("data", async (chunk) => {
-            packet = await packetDec.packetPipeline(chunk, packet)
 
+            console.log({chunk})
+
+            packet = await packetDec.packetPipeline(chunk, packet)
 
             if (packet.status.pingBaked || (packet.status.handshakeBaked && !ping)) {
                 clearTimeout(timeoutFunc);
@@ -29,16 +31,19 @@ async function getServerStatus(options) {
             }
 
             if (packet.status.handshakeBaked && !packet.status.pingSent) {
-
-                let pingRequest = await packetGen.craftPingPacket(1)
+                let pingRequest = await packetGen.craftPingPacket()
+                packet.status.pingSentTime = Date.now();
                 await portal.write(pingRequest)
                 packet.status.pingSent = true;
             }
         })
 
-        portal.once("error", (error) => {
+        portal.once("error", (netError) => {
             clearTimeout(timeoutFunc);
+            reject();
+            throw netError
         })
+
 
         let timeoutFunc = setTimeout(() => {
             portal.destroy();
@@ -53,6 +58,7 @@ let packetTemplate = {
         handshakeBaked: false,
         pingSent: false,
         pingBaked: false,
+        pingSentTime: null
     },
     meta: {
         metaCrafted: false,
