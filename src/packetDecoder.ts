@@ -1,9 +1,9 @@
-import varint from "varint"
-import Int64 from "node-int64";
+import varint from "./better-varint.js"
+import { Packet } from "./classes.js";
 
-async function packetPipeline(chunk, packet) {
+async function packetPipeline(chunk: Buffer, packet: Packet) {
   // Wait for and Collect all the data coming from the server.
-  if (packet.status.pingSent) return await craftPingResponse(chunk, packet);
+  if (packet.status.pingSent) return await craftLatency(chunk, packet);
 
   packet.dataBuffer = await Buffer.concat([
     packet.dataBuffer,
@@ -17,20 +17,20 @@ async function packetPipeline(chunk, packet) {
   return packet;
 }
 
-async function craftPingResponse(chunk, packet) {
-  // Field 1: Length of the entire object, (VarInt) - the value should always be 09
-  // Field 2: PacketID, (VarInt) - should always be 1 byte long.
-  // Field 3: Payload, (Long) - should always be 8 bytes long.
-  let dataLength = chunk[0]
-  let packetID = chunk[1]
-  if (dataLength != 9 || packetID != 1) throw new Error("Corrupted or non standard ping packet was received.")
-  let pingBuffer = chunk.slice(2)
-  packet.crafted.latency = Date.now() - Number(pingBuffer.readBigInt64BE());
+async function craftLatency(chunk: Buffer, packet: Packet) {
+  /*
+    The same packet we sent to the server should be sent back, however
+    some servers send some kind of non standard string back, therefore,
+    any packet sent by the server after we requested the ping 
+    is counted as the ping response.
+  */
+
+  packet.crafted.latency = Date.now() - packet.status.pingSentTime;
   packet.status.pingBaked = true;
-  return packet
+  return packet;
 }
 
-async function craftData(packet) {
+async function craftData(packet: Packet) {
   // This crafts the first and only data field. It slices off the meta fields.
   packet.fieldsBuffer = packet.dataBuffer.slice(packet.meta.metaLength)
   let fieldLength = varint.decode(packet.fieldsBuffer)
@@ -40,19 +40,19 @@ async function craftData(packet) {
   return packet;
 }
 
-async function craftPacketMeta(packet) {
+async function craftPacketMeta(packet: Packet) {
   // Field 1: Length of the packet, (VarInt)
   // Field 2: Packet ID, (VarInt)
   // Field 3: Data fields
-
-  packet.meta.dataLength = varint.decode(packet.dataBuffer, 0);
+  packet.meta.dataLength = varint.decode(packet.dataBuffer);
   packet.meta.fullLength = varint.encodingLength(packet.meta.dataLength) + packet.meta.dataLength;
-  packet.meta.packetID = varint.decode(packet.dataBuffer, varint.encodingLength(packet.meta.dataLength))
+  packet.meta.packetID = varint.decode(packet.dataBuffer, varint.encodingLength(packet.meta.dataLength));
   packet.meta.metaLength = varint.encodingLength(packet.meta.dataLength) + varint.encodingLength(packet.meta.packetID);
 
-  if (packet.meta.dataLength == null || packet.meta.fullLength == null || packet.meta.packetID == null) return new Error("Corrupted or invalid packet was received.")
-
+  if (packet.meta.dataLength == null || packet.meta.fullLength == null || packet.meta.packetID == null) throw new Error("Corrupted or invalid packet was received.")
+  console.log(packet.meta.dataLength, packet.meta.fullLength, packet.meta.packetID)
   packet.meta.metaCrafted = true;
+  packet.meta.packetInitialized = true;
   return packet;
 }
 

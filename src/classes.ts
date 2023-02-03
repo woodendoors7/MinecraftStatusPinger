@@ -1,0 +1,54 @@
+export class Packet {
+    status: PacketStatus = {
+        handshakeBaked: false,
+        pingSent: false,
+        pingBaked: false,
+        pingSentTime: null,
+    }
+    meta: PacketMeta = {
+        packetInitialized: false,
+        metaCrafted: false,
+        fieldsCrafted: false,
+        packetID: null,
+        dataLength: null,
+        fullLength: null,
+        metaLength: null,
+    }
+    dataBuffer = Buffer.alloc(0);
+    fieldsBuffer = Buffer.alloc(0);
+    crafted: PacketCrafted = {
+        data: null,
+        latency: null,
+    }
+}
+
+interface PacketStatus {
+    handshakeBaked: boolean,
+    pingSent: boolean,
+    pingBaked: boolean,
+    pingSentTime: number
+}
+
+interface PacketMeta {
+    packetInitialized: boolean
+    metaCrafted: boolean,
+    fieldsCrafted: boolean,
+    packetID: number,
+    dataLength: number,
+    fullLength: number,
+    metaLength: number,
+}
+
+interface PacketCrafted {
+    data: JSON,
+    latency: number
+}
+
+export interface ServerStatusOptions {
+    hostname: string,
+    port: number
+    timeout: number
+    ping: boolean
+}
+
+type Nul<Type> = Type | null;

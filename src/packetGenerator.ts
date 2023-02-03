@@ -1,17 +1,20 @@
-import varint from "varint"
+import varint from "./better-varint.js"
 const _protocolVersion = 753;
-import Int64 from "node-int64"
+import {Packet, ServerStatusOptions} from "./classes.js";
 
-
-async function craftHandshake(hostname, port) {
+async function craftHandshake(hostname: String, port:number) {
     let packetBody = await craftHandshakeBody(hostname, port);
 
     // Field 1: Length of the entire object, (VarInt)
     // Field 2: PacketID, (VarInt)
     // Field 3: The body of the request
-    let packetID = 0;
+    const packetID = 0;
+    
     let packetLengthBuffer = Buffer.from(varint.encode(varint.encodingLength(packetID) + packetBody.length));
     let packetIDBuffer = Buffer.from(varint.encode(packetID));
+
+    console.log({packetLengthBuffer, packetIDBuffer})
+
 
     let craftedHandshake = Buffer.concat([
         packetLengthBuffer,
@@ -22,7 +25,7 @@ async function craftHandshake(hostname, port) {
     return craftedHandshake
 }
 
-async function craftHandshakeBody(hostname, port) {
+async function craftHandshakeBody(hostname: String, port: number) {
     //* Field 1: The Protocol Version, (VarInt)
     //* Field 2: The hostname of the server, (String) prefixed with it's length (VarInt)
     //* Field 3: The port of the server, (UInt16)
@@ -33,6 +36,8 @@ async function craftHandshakeBody(hostname, port) {
     let portBuffer = Buffer.allocUnsafe(2)
     portBuffer.writeUInt16BE(port, 0)
     let nextStateBuffer = Buffer.from(varint.encode(1))
+
+    console.log({protocolVersionBuffer, hostnamePrefixBuffer, hostnameBuffer})
 
     let packetBody = Buffer.concat([
         protocolVersionBuffer,
@@ -45,7 +50,7 @@ async function craftHandshakeBody(hostname, port) {
     return packetBody;
 }
 
-async function craftEmptyPacket(packetID) {
+async function craftEmptyPacket(packetID: number) {
 
     let packetLengthBuffer = Buffer.from(varint.encode(varint.encodingLength(packetID)));
     let packetIDBuffer = Buffer.from(varint.encode(packetID));
@@ -57,12 +62,17 @@ async function craftEmptyPacket(packetID) {
     return craftedPacket;
 }
 
-async function craftPingPacket(packetID) {
+async function craftPingPacket() {
     // Field 1: Length of the entire object, (VarInt)
     // Field 2: PacketID, (VarInt)
     // Field 3: Payload, (Long)
 
-    let longBuffer = await makeLong(Date.now())
+    // The payload is the current time, however, it does not matter.
+    // The server should return the same value back, but not all servers do.
+    // The time value is stored in a variable. 
+    const packetID = 1;
+
+    let longBuffer = await makeLongBuffer(Date.now())
     let packetLengthBuffer = Buffer.from(varint.encode(varint.encodingLength(packetID) + longBuffer.length));
     let packetIDBuffer = Buffer.from(varint.encode(packetID));
 
@@ -71,14 +81,13 @@ async function craftPingPacket(packetID) {
         packetIDBuffer,
         longBuffer
     ])
+
     return craftedPacket;
 }
 
-async function makeLong(timePacket) {
-
-
+async function makeLongBuffer(longNumber: number) {
     let buf = Buffer.allocUnsafe(8);
-    buf.writeBigInt64BE(BigInt(timePacket))
+    buf.writeBigInt64BE(BigInt(longNumber))
 
     return buf;
 }

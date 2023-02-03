@@ -1,14 +1,14 @@
 import packetGen from "./packetGenerator.js"
 import packetDec from "./packetDecoder.js"
-import net from "net";
+import * as net from "net";
+import {Packet, ServerStatusOptions} from "./classes.js";
 
-async function getServerStatus(options) {
+export default async function getServerStatus(options: ServerStatusOptions) {
     return new Promise((resolve, reject) => {
-        let { hostname, port, timeout, ping } = options;
-        if (!hostname) throw new Error("Input Error: No hostname was specified.")
-        if (!port) port = 25565
-        if (!timeout) timeout = 10000;
-        if (ping == null) ping = true;
+        let hostname = options.hostname;
+        let port = options.port == null ? options.port : 25565;
+        let timeout = options.timeout == null ? options.timeout : 10000;
+        let ping = options.ping == null ? options.ping : true;
 
         // default port of 25565, default timeout of 10 seconds.
         let portal = net.createConnection(port, hostname, async () => {
@@ -18,10 +18,13 @@ async function getServerStatus(options) {
             portal.write(statusRequest);
         })
 
-        let packet = packetTemplate;
-        portal.on("data", async (chunk) => {
-            packet = await packetDec.packetPipeline(chunk, packet)
+        let packet = new Packet();
 
+        portal.on("data", async (chunk) => {
+
+            console.log({ chunk })
+
+            packet = await packetDec.packetPipeline(chunk, packet)
 
             if (packet.status.pingBaked || (packet.status.handshakeBaked && !ping)) {
                 clearTimeout(timeoutFunc);
@@ -29,16 +32,19 @@ async function getServerStatus(options) {
             }
 
             if (packet.status.handshakeBaked && !packet.status.pingSent) {
-
-                let pingRequest = await packetGen.craftPingPacket(1)
+                let pingRequest = await packetGen.craftPingPacket()
+                packet.status.pingSentTime = Date.now();
                 await portal.write(pingRequest)
                 packet.status.pingSent = true;
             }
         })
 
-        portal.once("error", (error) => {
+        portal.once("error", (netError) => {
             clearTimeout(timeoutFunc);
+            reject();
+            throw netError
         })
+
 
         let timeoutFunc = setTimeout(() => {
             portal.destroy();
@@ -48,26 +54,13 @@ async function getServerStatus(options) {
     })
 }
 
-let packetTemplate = {
-    status: {
-        handshakeBaked: false,
-        pingSent: false,
-        pingBaked: false,
-    },
-    meta: {
-        metaCrafted: false,
-        fieldsCrafted: false,
-        packetID: null,
-        dataLength: null,
-        fullLength: null,
-        metaLength: null
-    },
-    dataBuffer: Buffer.alloc(0),
-    fieldsBuffer: Buffer.alloc(0),
-    crafted: {
-        data: null,
-        latency: null
-    }
-}
 
-export default { getServerStatus }
+
+
+
+
+
+
+
+
+type Nul<Type> = Type | null;
