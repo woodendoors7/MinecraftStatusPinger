@@ -2,6 +2,7 @@ import varint from "./better-varint.js"
 const _protocolVersion = 753;
 import {Packet, ServerStatusOptions} from "./classes.js";
 
+
 async function craftHandshake(hostname: String, port:number) {
     let packetBody = await craftHandshakeBody(hostname, port);
 
@@ -73,6 +74,7 @@ async function craftPingPacket() {
     const packetID = 1;
 
     let longBuffer = await makeLongBuffer(Date.now())
+
     let packetLengthBuffer = Buffer.from(varint.encode(varint.encodingLength(packetID) + longBuffer.length));
     let packetIDBuffer = Buffer.from(varint.encode(packetID));
 
@@ -84,6 +86,7 @@ async function craftPingPacket() {
 
     return craftedPacket;
 }
+
 
 async function makeLongBuffer(longNumber: number) {
     let buf = Buffer.allocUnsafe(8);

@@ -1,7 +1,7 @@
 import packetGen from "./packetGenerator.js"
 import packetDec from "./packetDecoder.js"
 import * as net from "net";
-import {Packet, ServerStatusOptions} from "./classes.js";
+import { Packet, ServerStatusOptions } from "./classes.js";
 
 export default async function getServerStatus(options: ServerStatusOptions) {
     return new Promise((resolve, reject) => {
@@ -18,11 +18,13 @@ export default async function getServerStatus(options: ServerStatusOptions) {
             portal.write(statusRequest);
         })
 
+
         let packet = new Packet();
 
         portal.on("data", async (chunk) => {
 
             console.log({ chunk })
+
 
             packet = await packetDec.packetPipeline(chunk, packet)
 
@@ -53,14 +55,6 @@ export default async function getServerStatus(options: ServerStatusOptions) {
 
     })
 }
-
-
-
-
-
-
-
-
 
 
 type Nul<Type> = Type | null;

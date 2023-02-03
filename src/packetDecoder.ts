@@ -1,6 +1,7 @@
 import varint from "./better-varint.js"
 import { Packet } from "./classes.js";
 
+
 async function packetPipeline(chunk: Buffer, packet: Packet) {
   // Wait for and Collect all the data coming from the server.
   if (packet.status.pingSent) return await craftLatency(chunk, packet);
@@ -17,7 +18,9 @@ async function packetPipeline(chunk: Buffer, packet: Packet) {
   return packet;
 }
 
+
 async function craftLatency(chunk: Buffer, packet: Packet) {
+
   /*
     The same packet we sent to the server should be sent back, however
     some servers send some kind of non standard string back, therefore,
