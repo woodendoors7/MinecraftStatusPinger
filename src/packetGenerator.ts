@@ -14,9 +14,6 @@ async function craftHandshake(hostname: String, port:number) {
     let packetLengthBuffer = Buffer.from(varint.encode(varint.encodingLength(packetID) + packetBody.length));
     let packetIDBuffer = Buffer.from(varint.encode(packetID));
 
-    console.log({packetLengthBuffer, packetIDBuffer})
-
-
     let craftedHandshake = Buffer.concat([
         packetLengthBuffer,
         packetIDBuffer,
@@ -27,18 +24,16 @@ async function craftHandshake(hostname: String, port:number) {
 }
 
 async function craftHandshakeBody(hostname: String, port: number) {
-    //* Field 1: The Protocol Version, (VarInt)
-    //* Field 2: The hostname of the server, (String) prefixed with it's length (VarInt)
-    //* Field 3: The port of the server, (UInt16)
-    //* Field 4: Next expected state, whether to get the status (1) or login (2), (VarInt)
+    // Field 1: The Protocol Version, (VarInt)
+    // Field 2: The hostname of the server, (String) prefixed with it's length (VarInt)
+    // Field 3: The port of the server, (UInt16)
+    // Field 4: Next expected state, whether to get the status (1) or login (2), (VarInt)
     let protocolVersionBuffer = Buffer.from(varint.encode(_protocolVersion));
     let hostnamePrefixBuffer = Buffer.from(varint.encode(hostname.length));
     let hostnameBuffer = Buffer.from(hostname, 'utf8');
     let portBuffer = Buffer.allocUnsafe(2)
     portBuffer.writeUInt16BE(port, 0)
     let nextStateBuffer = Buffer.from(varint.encode(1))
-
-    console.log({protocolVersionBuffer, hostnamePrefixBuffer, hostnameBuffer})
 
     let packetBody = Buffer.concat([
         protocolVersionBuffer,
@@ -68,9 +63,9 @@ async function craftPingPacket() {
     // Field 2: PacketID, (VarInt)
     // Field 3: Payload, (Long)
 
-    // The payload is the current time, however, it does not matter.
+    //* The payload is the current time, however, it does not matter.
     // The server should return the same value back, but not all servers do.
-    // The time value is stored in a variable. 
+    // The time of when the ping request was sent is stored in a variable.
     const packetID = 1;
 
     let longBuffer = await makeLongBuffer(Date.now())

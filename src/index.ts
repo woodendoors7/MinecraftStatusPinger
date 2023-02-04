@@ -1,38 +1,50 @@
 import packetGen from "./packetGenerator.js"
 import packetDec from "./packetDecoder.js"
 import * as net from "net";
-import { Packet, ServerStatusOptions } from "./classes.js";
+import { Packet, ServerStatusOptions, ServerStatus } from "./classes.js";
 
-export default async function getServerStatus(options: ServerStatusOptions) {
-    return new Promise((resolve, reject) => {
+export default async function getServerStatus(options: ServerStatusOptions): Promise<ServerStatus> {
+    return new Promise<ServerStatus>((resolve, reject) => {
         let hostname = options.hostname;
-        let port = options.port == null ? options.port : 25565;
-        let timeout = options.timeout == null ? options.timeout : 10000;
-        let ping = options.ping == null ? options.ping : true;
+        let port = options.port != null ? options.port : 25565;
+        let timeout = options.timeout != null ? options.timeout : 10000;
+        let ping = options.ping != null ? options.ping : true;
+        let throwOnParseError = options.throwOnParseError != null ? options.throwOnParseError : true;
 
-        // default port of 25565, default timeout of 10 seconds.
+        // Default port of 25565, default timeout of 10 seconds.
+        // Ping is sent by default. 
         let portal = net.createConnection(port, hostname, async () => {
+            // Send first the handshake, and then the status request to the server.
             let handshake = await packetGen.craftHandshake(hostname, port);
             let statusRequest = await packetGen.craftEmptyPacket(0);
             portal.write(handshake);
             portal.write(statusRequest);
         })
 
-
         let packet = new Packet();
-
         portal.on("data", async (chunk) => {
 
-            console.log({ chunk })
-
+            /* 
+                Pass every new chunk of data sent from the server into the pipeline,
+                and also pass the packet object in, which holds the current state of the request.
+                The pipeline returns the packet object, with changes made from processing the data chunk. 
+            */
 
             packet = await packetDec.packetPipeline(chunk, packet)
 
+
             if (packet.status.pingBaked || (packet.status.handshakeBaked && !ping)) {
+                let serverStatus = new ServerStatus(packet.crafted.data, packet.crafted.latency, throwOnParseError)
                 clearTimeout(timeoutFunc);
-                resolve(packet.crafted);
+                portal.destroy();
+                return resolve(serverStatus);
             }
 
+
+            /* 
+                If the handshake and status request were sent out and replied to,
+                generate the ping packet, log the time it was sent out on and send it.
+            */
             if (packet.status.handshakeBaked && !packet.status.pingSent) {
                 let pingRequest = await packetGen.craftPingPacket()
                 packet.status.pingSentTime = Date.now();

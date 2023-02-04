@@ -26,7 +26,8 @@ interface PacketStatus {
     handshakeBaked: boolean,
     pingSent: boolean,
     pingBaked: boolean,
-    pingSentTime: number
+    pingSentTime: number,
+
 }
 
 interface PacketMeta {
@@ -40,15 +41,40 @@ interface PacketMeta {
 }
 
 interface PacketCrafted {
-    data: JSON,
+    data: string,
     latency: number
 }
 
 export interface ServerStatusOptions {
     hostname: string,
-    port: number
-    timeout: number
-    ping: boolean
+    port?: number
+    timeout?: number
+    ping?: boolean,
+    throwOnParseError?: boolean
 }
+
+
+export class ServerStatus {
+    constructor(statusRaw: string, latency?: number, throwOnParseError?: boolean) {
+
+        try {
+            this.status = JSON.parse(statusRaw);
+        } catch (err) {
+            if (throwOnParseError) throw err
+            this.status = null
+        }
+
+        this.statusRaw = statusRaw
+        //console.log({latency, statusRaw, throwOnParseError})
+        if (latency) {
+            this.latency = latency
+        }
+    }
+    latency?: number;
+    status?: JSON;
+    statusRaw: string;
+}
+
+
 
 type Nul<Type> = Type | null;
