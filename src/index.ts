@@ -3,13 +3,20 @@ import packetDec from "./packetDecoder.js"
 import * as net from "net";
 import { Packet, ServerStatusOptions, ServerStatus } from "./classes.js";
 
-export default async function getServerStatus(options: ServerStatusOptions): Promise<ServerStatus> {
-    return new Promise<ServerStatus>((resolve, reject) => {
+import { promises as dnsPromises } from 'dns';
+const dns = new dnsPromises.Resolver();
+dns.setServers(["1.1.1.1", "8.8.8.8", "1.0.0.1", "8.8.4.4"]);
+
+export async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
+    return new Promise<ServerStatus>(async (resolve, reject) => {
         let hostname = options.hostname;
         let port = options.port != null ? options.port : 25565;
         let timeout = options.timeout != null ? options.timeout : 10000;
         let ping = options.ping != null ? options.ping : true;
         let throwOnParseError = options.throwOnParseError != null ? options.throwOnParseError : true;
+        let disableSRV = options.disableSRV != null ? options.disableSRV : false;
+        console.log(disableSRV)
+        if (!disableSRV) ({ hostname, port } = await processSRV(hostname, port))
 
         // Default port of 25565, default timeout of 10 seconds.
         // Ping is sent by default. 
@@ -40,11 +47,11 @@ export default async function getServerStatus(options: ServerStatusOptions): Pro
                 return resolve(serverStatus);
             }
 
-
             /* 
                 If the handshake and status request were sent out and replied to,
                 generate the ping packet, log the time it was sent out on and send it.
             */
+
             if (packet.status.handshakeBaked && !packet.status.pingSent) {
                 let pingRequest = await packetGen.craftPingPacket()
                 packet.status.pingSentTime = Date.now();
@@ -59,7 +66,6 @@ export default async function getServerStatus(options: ServerStatusOptions): Pro
             throw netError
         })
 
-
         let timeoutFunc = setTimeout(() => {
             portal.destroy();
             throw new Error("Timed out.")
@@ -68,5 +74,17 @@ export default async function getServerStatus(options: ServerStatusOptions): Pro
     })
 }
 
+export async function setDnsServers(serverArray: Array<string>){
+   await dns.setServers(serverArray);
+   return true;
+}
 
-type Nul<Type> = Type | null;
+async function processSRV(hostname: string, port: number) {
+    if (hostname == "localhost" && port != 25565 && net.isIP(hostname) != 0) return { hostname, port }
+    let result = await dns.resolveSrv("_minecraft._tcp." + hostname).catch(()=>{})
+    if (!result || result.length == 0 || !result[0].name || !result[0].port) return { hostname, port }
+    return {hostname: result[0].name, port: result[0].port}
+}
+
+
+

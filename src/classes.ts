@@ -27,7 +27,6 @@ interface PacketStatus {
     pingSent: boolean,
     pingBaked: boolean,
     pingSentTime: number,
-
 }
 
 interface PacketMeta {
@@ -50,7 +49,8 @@ export interface ServerStatusOptions {
     port?: number
     timeout?: number
     ping?: boolean,
-    throwOnParseError?: boolean
+    throwOnParseError?: boolean,
+    disableSRV?: boolean
 }
 
 
@@ -76,5 +76,3 @@ export class ServerStatus {
 }
 
 
-
-type Nul<Type> = Type | null;
