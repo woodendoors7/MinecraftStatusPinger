@@ -7,7 +7,7 @@ import { promises as dnsPromises } from 'dns';
 const dns = new dnsPromises.Resolver();
 dns.setServers(["1.1.1.1", "8.8.8.8", "1.0.0.1", "8.8.4.4"]);
 
-export async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
+async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
     return new Promise<ServerStatus>(async (resolve, reject) => {
         let hostname = options.hostname;
         let port = options.port != null ? options.port : 25565;
@@ -74,17 +74,21 @@ export async function lookup(options: ServerStatusOptions): Promise<ServerStatus
     })
 }
 
-export async function setDnsServers(serverArray: Array<string>){
-   await dns.setServers(serverArray);
-   return true;
+async function setDnsServers(serverArray: Array<string>) {
+    await dns.setServers(serverArray);
+    return true;
 }
 
 async function processSRV(hostname: string, port: number) {
+    /*
+     *  Tries to get a SRV record from the provided hostname, unless disabled with the disableSRV flag.
+     *  The hostname can't be localhost, the port always has to be 25565, and the hostname cannot be an IP. 
+    */
+
     if (hostname == "localhost" && port != 25565 && net.isIP(hostname) != 0) return { hostname, port }
-    let result = await dns.resolveSrv("_minecraft._tcp." + hostname).catch(()=>{})
+    let result = await dns.resolveSrv("_minecraft._tcp." + hostname).catch(() => { })
     if (!result || result.length == 0 || !result[0].name || !result[0].port) return { hostname, port }
-    return {hostname: result[0].name, port: result[0].port}
+    return { hostname: result[0].name, port: result[0].port }
 }
 
-
-
+export default { setDnsServers, lookup }
