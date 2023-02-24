@@ -56,16 +56,13 @@ export interface ServerStatusOptions {
 
 export class ServerStatus {
     constructor(statusRaw: string, latency?: number, throwOnParseError?: boolean) {
-
         try {
             this.status = JSON.parse(statusRaw);
         } catch (err) {
             if (throwOnParseError) throw err
             this.status = null
         }
-
         this.statusRaw = statusRaw
-        //console.log({latency, statusRaw, throwOnParseError})
         if (latency) {
             this.latency = latency
         }

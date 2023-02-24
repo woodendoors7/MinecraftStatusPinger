@@ -15,7 +15,6 @@ async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
         let ping = options.ping != null ? options.ping : true;
         let throwOnParseError = options.throwOnParseError != null ? options.throwOnParseError : true;
         let disableSRV = options.disableSRV != null ? options.disableSRV : false;
-        console.log(disableSRV)
         if (!disableSRV) ({ hostname, port } = await processSRV(hostname, port))
 
         // Default port of 25565, default timeout of 10 seconds.

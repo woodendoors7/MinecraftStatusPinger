@@ -1,246 +1,108 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
 
 
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
-
-
-<!-- PROJECT LOGO -->
-<br />
 <div align="center">
-  <a href="https://github.com/woodendoors7/MinecraftStatusPinger">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
-<h2 align="center">Minecraft Status Pinger</h3>
-
-  <p align="center">
-    project_description
-    <br />
-    <a href="https://github.com/woodendoors7/MinecraftStatusPinger"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/woodendoors7/MinecraftStatusPinger">View Demo</a>
-    ·
-    <a href="https://github.com/woodendoors7/MinecraftStatusPinger/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/woodendoors7/MinecraftStatusPinger/issues">Request Feature</a>
-  </p>
+  <img src="mcblock.png"  width="600" border="0px"/>
 </div>
 
 
+<h3>The best, small, very performant, zero dependency, TypeScript library specifically aimed for pinging Minecraft servers. (1.7+)</h3>
+<hr>
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
+### Features
+
+- Server Ping
+- Server MOTD
+- Server Thumbnail
+- Server Version
+- Player Count
+- Player List
 
 
+### Built with
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+- TypeScript
+- Native libraries
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+## Getting started
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `woodendoors7`, `MinecraftStatusPinger`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `Minecraft Status Pinger`, `project_description`
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-### Built With
-
-* [![Next][Next.js]][Next-url]
-* [![React][React.js]][React-url]
-* [![Vue][Vue.js]][Vue-url]
-* [![Angular][Angular.io]][Angular-url]
-* [![Svelte][Svelte.dev]][Svelte-url]
-* [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-* [![JQuery][JQuery.com]][JQuery-url]
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- GETTING STARTED -->
-## Getting Started
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
-
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-   ```sh
-   git clone https://github.com/woodendoors7/MinecraftStatusPinger.git
-   ```
-3. Install NPM packages
-   ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
-   ```
+```bash
+npm install minecraftstatuspinger
+```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Example
+```typescript
+import mc from "minecraftstatuspinger";
 
+let result = await mc.lookup({
+    hostname: "mc.hypixel.net",
+    port: 25565,
+    ping: true,
+    timeout: 10000,
+    throwOnParseError: false,
+    disableSRV: false
+})
 
+console.log(result);
+```
+## Docs
+* <b>.lookup(): `((options: ServerStatusOptions) => Promise<ServerStatus>)`</b>
+  * Options
+    * <b>`hostname:`</b> string
+      > Either an IP, or a hostname of the server.
+    * <b>`port?:`</b> number <i> `default: 25565`</i>
+      > Port of the server. Any port other than 25565 disables SRV lookup.
+    * <b>`timeout?:`</b> number <i>`default: 10000`</i>
+      > Timeout of when an error is thrown after no response. Default is 10 seconds.
+    * <b>`ping?:`</b> boolean <i>`default: true`</i>
+      > Whether to send a payload at the end to get the latency of the server. 
+    * <b>`throwOnParseError?:`</b> boolean <i>`default: true`</i>
+      > Whether to throw an error if the status packet fails to parse the status field. The `statusRaw` field is always    included.
+    * <b>`disableSrv?:`</b> boolean <i>`default: false`</i>
+      > Whether to force skip SRV lookups. Useful when only pinging IP addresses and not hostnames.
+  * ServerStatus
+    * <b>`latency?:`</b> number
+      > The time it takes to send and receive a payload from the server. Will be null if `ping` option is false
+    * <b>`status?:`</b> JSON
+      > Parsed status response from the sever. Will be null if the status fails to parse. <a href="https://wiki.vg/Server_List_Ping">Example of a valid Status Response.</a>
+    * <b>`statusRaw:`</b> string
+      > Raw status response in the form of a string. Useful when `status` fails to parse.
 
-<!-- USAGE EXAMPLES -->
-## Usage
+* <b>.setDnsServers(): ((serverArray: string[]) => Promise<boolean>)</b>
+  > It wraps the `dns.setServers` function, ueful when you want to look up the SRV records with different DNS servers.<br> The default servers are:<br>
+   `["1.1.1.1", "8.8.8.8", "1.0.0.1", "8.8.4.4"]` <br>
+   (Cloudflare, Google, Cloudflare Alt, Google Alt). <br>
+   Pass in a parameter which is an array of hostnames or IP addresses of DNS servers. It will either return true, or throw an error. 
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+### Troubleshooting
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+Or FAQs, if that's more appropriate.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
-
-See the [open issues](https://github.com/woodendoors7/MinecraftStatusPinger/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+## Back matter
 
 
 
-<!-- LICENSE -->
-## License
+### Acknowledgements
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Thanks to all who helped inspire this template.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### See also
 
+- [A simple README.md template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
+- [A template to make good README.md](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
+- [A sample README for all your GitHub projects](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
+- [A simple README.md template to kickstart projects](https://github.com/me-and-company/readme-template)
 
+### To-do
 
-<!-- CONTACT -->
-## Contact
+- [ ] Still need to do this
+- [ ] ~~Decided not to do this~~
+- [x] Done!
 
+### License
 
-Project Link: [https://github.com/woodendoors7/MinecraftStatusPinger](https://github.com/woodendoors7/MinecraftStatusPinger)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* []()
-* []()
-* []()
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/woodendoors7/MinecraftStatusPinger.svg?style=for-the-badge
-[contributors-url]: https://github.com/woodendoors7/MinecraftStatusPinger/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/woodendoors7/MinecraftStatusPinger.svg?style=for-the-badge
-[forks-url]: https://github.com/woodendoors7/MinecraftStatusPinger/network/members
-[stars-shield]: https://img.shields.io/github/stars/woodendoors7/MinecraftStatusPinger.svg?style=for-the-badge
-[stars-url]: https://github.com/woodendoors7/MinecraftStatusPinger/stargazers
-[issues-shield]: https://img.shields.io/github/issues/woodendoors7/MinecraftStatusPinger.svg?style=for-the-badge
-[issues-url]: https://github.com/woodendoors7/MinecraftStatusPinger/issues
-[license-shield]: https://img.shields.io/github/license/woodendoors7/MinecraftStatusPinger.svg?style=for-the-badge
-[license-url]: https://github.com/woodendoors7/MinecraftStatusPinger/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
-[product-screenshot]: images/screenshot.png
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next-url]: https://nextjs.org/
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
-[Vue-url]: https://vuejs.org/
-[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
-[Angular-url]: https://angular.io/
-[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
-[Svelte-url]: https://svelte.dev/
-[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[Laravel-url]: https://laravel.com
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com 
+This project is licensed under the [MIT License](LICENSE.md).
