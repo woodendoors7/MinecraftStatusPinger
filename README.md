@@ -1,14 +1,13 @@
-
-
-
+# Under construction
 
 <div align="center">
-  <img src="mcblock.png"  width="600" border="0px"/>
+  <img src="assets/mcblock.png"  width="600" border="0px"/>
 </div>
 
-
-<h3>The best, small, very performant, zero dependency, TypeScript library specifically aimed for pinging Minecraft servers. (1.7+)</h3>
+<h3><code style="color : yellowgreen">A modern, small, performant, zero dependency TypeScript library specifically made for fast pinging and status-getting of Minecraft servers. (1.7+)</code></h3>
 <hr>
+
+[![forthebadge](https://forthebadge.com/images/badges/gluten-free.svg)](https://forthebadge.com)
 
 ### Features
 
@@ -30,7 +29,7 @@
 
 ### Installation
 
-```bash
+```bat
 npm install minecraftstatuspinger
 ```
 
@@ -49,7 +48,12 @@ let result = await mc.lookup({
 
 console.log(result);
 ```
+
+
 ## Docs
+
+<img src="assets/pleasestar.png" width="350">
+
 * <b>.lookup(): `((options: ServerStatusOptions) => Promise<ServerStatus>)`</b>
   * Options
     * <b>`hostname:`</b> string
@@ -72,37 +76,42 @@ console.log(result);
     * <b>`statusRaw:`</b> string
       > Raw status response in the form of a string. Useful when `status` fails to parse.
 
-* <b>.setDnsServers(): ((serverArray: string[]) => Promise<boolean>)</b>
-  > It wraps the `dns.setServers` function, ueful when you want to look up the SRV records with different DNS servers.<br> The default servers are:<br>
-   `["1.1.1.1", "8.8.8.8", "1.0.0.1", "8.8.4.4"]` <br>
-   (Cloudflare, Google, Cloudflare Alt, Google Alt). <br>
-   Pass in a parameter which is an array of hostnames or IP addresses of DNS servers. It will either return true, or throw an error. 
+* <b>.setDnsServers(): `((serverArray: string[]) => Promise<boolean>)`</b>
+  > It wraps the `dns.setServers` function, ueful when you want to look up the SRV records with different DNS servers. <br>
+    The first IP in the array is always the main DNS server, others are backup servers. <br><br>
+    Pass in a parameter which is an array of hostnames or IP addresses of DNS servers. It will either return true, or throw an error. 
+  
+  
+  Usage:
+  ```js
+    // Recommended servers
+    mc.setDnsServers(["9.9.9.9", "1.1.1.1", "8.8.8.8"])
+    // (Quad9, Cloudflare, Google)
+    // Cloudflare is fastest, Quad9 is most private. Change order to fit your priorities.
+  ```
+  The default servers are the DNS servers of your computer. If you never changed them, they will be the DNS servers of your ISP.<br>
+  <code style="color : darkorange">❗ I strongly recommend changing your default DNS servers.</code><br>
+  <code style="color : darkorange">The lookups will be faster and more private than what your ISP can provide.</code>
 
-### Troubleshooting
-
-Or FAQs, if that's more appropriate.
-
-## Back matter
 
 
+
+### Contact
+
+If you have some questions, you can message me through Discord - woodendoors7[hash]6052 
 
 ### Acknowledgements
 
-Thanks to all who helped inspire this template.
+[TINY Readme](https://gist.github.com/noperator/4eba8fae61a23dc6cb1fa8fbb9122d45)
 
-### See also
-
-- [A simple README.md template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
-- [A template to make good README.md](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-- [A sample README for all your GitHub projects](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
-- [A simple README.md template to kickstart projects](https://github.com/me-and-company/readme-template)
 
 ### To-do
 
-- [ ] Still need to do this
-- [ ] ~~Decided not to do this~~
-- [x] Done!
+- [x] Do SRV lookups
+- [ ] Support versions less than 1.7.
+- [ ] Support bedrock version (Probably won't do this. I would either have to install the raknet dependency, or implement my own stuff for pinging in UDP. Use [bedrock-protocol](https://github.com/PrismarineJS/bedrock-protocol) for this purpose.)
+
 
 ### License
 
-This project is licensed under the [MIT License](LICENSE.md).
+This project is licensed under the [GNU General Public License v3.0](LICENSE).

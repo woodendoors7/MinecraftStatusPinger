@@ -3,10 +3,24 @@ import packetDec from "./packetDecoder.js"
 import * as net from "net";
 import { Packet, ServerStatusOptions, ServerStatus } from "./classes.js";
 
-import { promises as dnsPromises } from 'dns';
-const dns = new dnsPromises.Resolver();
-dns.setServers(["1.1.1.1", "8.8.8.8", "1.0.0.1", "8.8.4.4"]);
+import { promises as dns } from 'dns';
 
+
+/**
+ * Looks up the server.
+ * @example
+ * Here's a simple example:
+ * ```
+ * let result = await mc.lookup({
+ *   hostname: "mc.hypixel.net",
+ *    port: 25565,
+ *    ping: true,
+ *    timeout: 10000,
+ *    throwOnParseError: false,
+ *    disableSRV: false
+ * })
+ * ```
+ */
 async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
     return new Promise<ServerStatus>(async (resolve, reject) => {
         let hostname = options.hostname;
@@ -19,7 +33,8 @@ async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
 
         // Default port of 25565, default timeout of 10 seconds.
         // Ping is sent by default. 
-        let portal = net.createConnection(port, hostname, async () => {
+
+        let portal = net.createConnection({ port: port, host: hostname, lookup: customLookup }, async () => {
             // Send first the handshake, and then the status request to the server.
             let handshake = await packetGen.craftHandshake(hostname, port);
             let statusRequest = await packetGen.craftEmptyPacket(0);
@@ -73,9 +88,25 @@ async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
     })
 }
 
+
+/**
+ * Used for changing the default DNS servers. 
+ * @example
+ * ```
+    // Recommended servers
+    mc.setDnsServers(["9.9.9.9", "1.1.1.1", "8.8.8.8"])
+    // (Quad9, Cloudflare, Google)
+    // Cloudflare is fastest, Quad9 is most private. Change order to fit your priorities.
+```
+ */
 async function setDnsServers(serverArray: Array<string>) {
     await dns.setServers(serverArray);
     return true;
+}
+
+async function customLookup(hostname: string, options: Object, callback: CallableFunction) {
+   let result = await dns.lookup(hostname, options)
+   callback(null, result.address, result.family);
 }
 
 async function processSRV(hostname: string, port: number) {

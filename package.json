@@ -7,13 +7,14 @@
   "files": [
     "dist"
   ],
-  "version": "0.1.1-dev",
-  "description": "The best library for getting the ping and status of Minecraft servers, written in TypeScript with zero dependencies.",
+  "version": "0.1.2-dev",
+  "description": "The best modern library for getting the ping and status of Minecraft servers, written in TypeScript with zero dependencies.",
   "keywords": [
     "minecraft status",
     "minecraft ping",
     "minecraft server",
-    "motd"
+    "motd",
+    "favicon"
   ],
   "author": "woodendoors_7",
   "homepage": "https://github.com/woodendoors7/MinecraftStatusPinger#readme",
@@ -23,7 +24,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "cls && tsc -p tsconfig.json && cd test && tsc --target ES2021 --strictNullChecks true --moduleResolution node test.ts && node test.js",
+    "test": "cls && tsc && cd test && tsc --target ES2021 --strictNullChecks true --moduleResolution node test.ts && node test.js",
     "start": "node dist/index.js",
     "build": "tsc -p tsconfig.json",
     "dev": "ts-node-dev src/index.ts"
