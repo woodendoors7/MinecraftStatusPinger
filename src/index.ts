@@ -21,6 +21,7 @@ import { promises as dns } from 'dns';
  * })
  * ```
  */
+
 async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
     return new Promise<ServerStatus>(async (resolve, reject) => {
         let hostname = options.hostname;

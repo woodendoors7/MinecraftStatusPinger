@@ -1,13 +1,12 @@
 # Under construction
 
 <div align="center">
-  <img src="assets/mcblock.png"  width="600" border="0px"/>
+  <img src="https://github.com/woodendoors7/MinecraftStatusPinger/blob/dev/assets/mcblock.png"  width="600" border="0px"/>
 </div>
 
 <h3><code style="color : yellowgreen">A modern, small, performant, zero dependency TypeScript library specifically made for fast pinging and status-getting of Minecraft servers. (1.7+)</code></h3>
 <hr>
 
-[![forthebadge](https://forthebadge.com/images/badges/gluten-free.svg)](https://forthebadge.com)
 
 ### Features
 
@@ -52,7 +51,7 @@ console.log(result);
 
 ## Docs
 
-<img src="assets/pleasestar.png" width="350">
+<img src="https://github.com/woodendoors7/MinecraftStatusPinger/blob/dev/assets/pleasestar.png" width="350">
 
 * <b>.lookup(): `((options: ServerStatusOptions) => Promise<ServerStatus>)`</b>
   * Options
