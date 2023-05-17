@@ -97,7 +97,8 @@ async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
     // Recommended servers
     mc.setDnsServers(["9.9.9.9", "1.1.1.1", "8.8.8.8"])
     // (Quad9, Cloudflare, Google)
-    // Cloudflare is fastest, Quad9 is most private. Change order to fit your priorities.
+    // Cloudflare is fastest for most people, Quad9 is technically most private. Change order to fit your priorities.
+    // You only need to ever change from your ISP's DNS servers if you do tons of lookups.
 ```
  */
 async function setDnsServers(serverArray: Array<string>) {

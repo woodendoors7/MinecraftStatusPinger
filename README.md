@@ -86,11 +86,12 @@ console.log(result);
     // Recommended servers
     mc.setDnsServers(["9.9.9.9", "1.1.1.1", "8.8.8.8"])
     // (Quad9, Cloudflare, Google)
-    // Cloudflare is fastest, Quad9 is most private. Change order to fit your priorities.
+    // Cloudflare is fastest for most people, Quad9 is technically most private. Change order to fit your priorities.
+    // You only need to ever change from your ISP's DNS servers if you do tons of lookups.
   ```
   The default servers are the DNS servers of your computer. If you never changed them, they will be the DNS servers of your ISP.<br>
-  <code style="color : darkorange">❗ I strongly recommend changing your default DNS servers.</code><br>
-  <code style="color : darkorange">The lookups will be faster and more private than what your ISP can provide.</code>
+  <code style="color : darkorange">❗ I recommend changing your default DNS servers if you're doing lots of lookups.</code><br>
+  <code style="color : darkorange">The lookups will be faster than what your ISP can provide.</code>
 
 
 
