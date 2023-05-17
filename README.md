@@ -91,7 +91,7 @@ console.log(result);
   ```
   The default servers are the DNS servers of your computer. If you never changed them, they will be the DNS servers of your ISP.<br>
   <code style="color : darkorange">❗ I recommend changing your default DNS servers if you're doing lots of lookups.</code><br>
-  <code style="color : darkorange">The lookups will be faster than what your ISP can provide.</code>
+  <code style="color : darkorange">The lookups will be faster than what your ISP can do.</code>
 
 
 
