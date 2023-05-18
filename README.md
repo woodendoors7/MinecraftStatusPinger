@@ -98,7 +98,7 @@ console.log(result);
 
 ### Contact
 
-If you have some questions, you can message me through Discord - woodendoors7[hash]6052 
+If you have some questions, you can message me through Discord - houtendeur7[hash]6052 
 
 ### Acknowledgements
 
