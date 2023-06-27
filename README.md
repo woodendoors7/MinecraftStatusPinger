@@ -53,7 +53,7 @@ console.log(result);
 
 <img src="https://papers.floppa.hair/mcstatuspinger/pleasestar.png" width="350">
 
-* <b>.lookup(): `((options: ServerStatusOptions) => Promise<ServerStatus>)`</b>
+* <b id="lookupOptions">.lookup(): `((options: ServerStatusOptions) => Promise<ServerStatus>)`</b>
   * Options
     * <b>`hostname:`</b> string
       > Either an IP, or a hostname of the server.
@@ -75,7 +75,7 @@ console.log(result);
     * <b>`statusRaw:`</b> string
       > Raw status response in the form of a string. Useful when `status` fails to parse.
 
-* <b>.setDnsServers(): `((serverArray: string[]) => Promise<boolean>)`</b>
+* <b id="setDnsOptions">.setDnsServers(): `((serverArray: string[]) => Promise<boolean>)`</b>
   > It wraps the `dns.setServers` function, ueful when you want to look up the SRV records with different DNS servers. <br>
     The first IP in the array is always the main DNS server, others are backup servers. <br><br>
     Pass in a parameter which is an array of hostnames or IP addresses of DNS servers. It will either return true, or throw an error. 
