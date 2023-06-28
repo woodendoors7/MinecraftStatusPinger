@@ -58,6 +58,7 @@ export class ServerStatus {
     constructor(statusRaw: string, latency?: number, throwOnParseError?: boolean) {
         try {
             this.status = JSON.parse(statusRaw);
+            
         } catch (err) {
             if (throwOnParseError) throw err
             this.status = null
@@ -68,8 +69,12 @@ export class ServerStatus {
         }
     }
     latency?: number;
-    status?: JSON;
+    status?: uncertainObj;
     statusRaw: string;
 }
 
 
+type uncertainObj = {
+    [key: string]: any;
+};
+ 
