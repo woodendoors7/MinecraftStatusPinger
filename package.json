@@ -7,7 +7,7 @@
   "files": [
     "dist"
   ],
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "The best modern library for getting the ping and status of Minecraft servers, written in TypeScript with zero dependencies.",
   "keywords": [
     "minecraft status",
