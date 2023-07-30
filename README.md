@@ -1,33 +1,32 @@
 
 
 <div align="center">
-  <img src="https://papers.floppa.hair/mcstatuspinger/mcblock.png"  width="600" border="0px"/>
+  <img src="https://papers.floppa.hair/mcstatuspinger/mcblock.png" alt="big MinecraftStatusPinger logo" width="600" border="0px"/>
+
 </div>
 
-<h3><code style="color : yellowgreen">A modern, small, performant, zero dependency TypeScript library specifically made for fast pinging and status-getting of Minecraft servers. (1.7+)</code></h3>
+
+<h3><code style="color: yellowgreen">A modern, small, performant, zero dependency TypeScript library specifically made for fast pinging and status-getting of Minecraft servers. (1.7+)</code></h3>
+
 <hr>
 
 
-### Features
+### What can this be used for?
 
-- Server Ping
-- Server MOTD
-- Server Thumbnail
-- Server Version
-- Player Count
-- Player List
+- Getting server **Latency (ping)**
+- Getting server **MOTD**
+- Downloading server **Thumbnail (favicon)**
+- Viewing Server **Version**
+- Fetching **Player Count** and **Playerlist**
 
-
-### Built with
-
-- TypeScript
-- Native libraries
 
 ## Getting started
 
+### Requirements
+- NodeJS (used to run JavaScript code)
+- NPM (used to install Node packages)
 
 ### Installation
-
 ```bat
 npm install minecraftstatuspinger
 ```
