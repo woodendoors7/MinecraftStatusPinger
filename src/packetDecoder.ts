@@ -1,5 +1,5 @@
 import varint from "./better-varint.js"
-import { Packet } from "./classes.js";
+import { Packet } from "./types.js";
 
 
 async function packetPipeline(chunk: Buffer, packet: Packet) {

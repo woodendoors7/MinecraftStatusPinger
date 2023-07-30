@@ -1,7 +1,7 @@
 import packetGen from "./packetGenerator.js"
 import packetDec from "./packetDecoder.js"
 import * as net from "net";
-import { Packet, ServerStatusOptions, ServerStatus } from "./classes.js";
+import { Packet, ServerStatusOptions, ServerStatus } from "./types.js";
 
 import { promises as dns } from 'dns';
 
@@ -11,8 +11,7 @@ import { promises as dns } from 'dns';
  * @example
  * Here's a simple example:
  * ```
- * let result = await mc.lookup({
- *   hostname: "mc.hypixel.net",
+ * let result = await mc.lookup("mc.hypixel.net", {
  *    port: 25565,
  *    ping: true,
  *    timeout: 10000,
@@ -22,16 +21,19 @@ import { promises as dns } from 'dns';
  * ```
  */
 
-async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
+async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
     return new Promise<ServerStatus>(async (resolve, reject) => {
-        let hostname = options.hostname;
+ 
+        let hostname = options.host || options.hostname;
+        if(!hostname) throw new Error("No hostname was provided!")
+
         let port = options.port != null ? options.port : 25565;
         let timeout = options.timeout != null ? options.timeout : 10000;
         let ping = options.ping != null ? options.ping : true;
         let throwOnParseError = options.throwOnParseError != null ? options.throwOnParseError : true;
         let disableSRV = options.disableSRV != null ? options.disableSRV : false;
+        let disableJSONParse = options.disableJSONParse != null ? options.disableJSONParse : false;
         if (!disableSRV) ({ hostname, port } = await processSRV(hostname, port))
-
         // Default port of 25565, default timeout of 10 seconds.
         // Ping is sent by default. 
 
@@ -56,7 +58,7 @@ async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
 
 
             if (packet.status.pingBaked || (packet.status.handshakeBaked && !ping)) {
-                let serverStatus = new ServerStatus(packet.crafted.data, packet.crafted.latency, throwOnParseError)
+                let serverStatus = new ServerStatus(packet.crafted.data, packet.crafted.latency, throwOnParseError, disableJSONParse)
                 clearTimeout(timeoutFunc);
                 portal.destroy();
                 return resolve(serverStatus);
@@ -97,8 +99,7 @@ async function lookup(options: ServerStatusOptions): Promise<ServerStatus> {
     // Recommended servers
     mc.setDnsServers(["9.9.9.9", "1.1.1.1", "8.8.8.8"])
     // (Quad9, Cloudflare, Google)
-    // Cloudflare is fastest for most people, Quad9 is technically most private. Change order to fit your priorities.
-    // You only need to ever change from your ISP's DNS servers if you do tons of lookups.
+    // Cloudflare is the fastest for DNS queries in most of the world.
 ```
  */
 async function setDnsServers(serverArray: Array<string>) {
@@ -107,20 +108,20 @@ async function setDnsServers(serverArray: Array<string>) {
 }
 
 async function customLookup(hostname: string, options: Object, callback: CallableFunction) {
-   let result = await dns.lookup(hostname, options)
-   callback(null, result.address, result.family);
+    let result = await dns.lookup(hostname, options)
+    callback(null, result.address, result.family);
 }
 
 async function processSRV(hostname: string, port: number) {
     /*
      *  Tries to get a SRV record from the provided hostname, unless disabled with the disableSRV flag.
-     *  The hostname can't be localhost, the port always has to be 25565, and the hostname cannot be an IP. 
+     *  The hostname can't be localhostname, the port always has to be 25565, and the hostname cannot be an IP. 
     */
 
-    if (hostname == "localhost" && port != 25565 && net.isIP(hostname) != 0) return { hostname, port }
+    if (hostname == "localhostname" && port != 25565 && net.isIP(hostname) != 0) return { hostname, port }
     let result = await dns.resolveSrv("_minecraft._tcp." + hostname).catch(() => { })
     if (!result || result.length == 0 || !result[0].name || !result[0].port) return { hostname, port }
-    return { hostname: result[0].name, port: result[0].port }
+    return { hostname: result[0].name, port: result[0].port}
 }
 
 export default { setDnsServers, lookup }

@@ -7,14 +7,14 @@
   "files": [
     "dist"
   ],
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "The best modern library for getting the ping and status of Minecraft servers, written in TypeScript with zero dependencies.",
   "keywords": [
     "minecraft status",
     "minecraft ping",
     "minecraft server",
     "motd",
-    "favicon"
+    "minecraft"
   ],
   "author": "woodendoors_7",
   "homepage": "https://github.com/woodendoors7/MinecraftStatusPinger#readme",

@@ -44,37 +44,44 @@ interface PacketCrafted {
     latency: number
 }
 
-export interface ServerStatusOptions {
-    hostname: string,
+interface _ServerStatusOptions {
     port?: number
     timeout?: number
     ping?: boolean,
     throwOnParseError?: boolean,
-    disableSRV?: boolean
+    disableSRV?: boolean,
+    disableJSONParse?: boolean,
 }
 
+type NotBoth =
+    | {host: string, hostname?: never}
+    | {host?: never, hostname: string}
+
+export type ServerStatusOptions = _ServerStatusOptions & NotBoth;
 
 export class ServerStatus {
-    constructor(statusRaw: string, latency?: number, throwOnParseError?: boolean) {
-        try {
-            this.status = JSON.parse(statusRaw);
-            
-        } catch (err) {
-            if (throwOnParseError) throw err
-            this.status = null
-        }
+    constructor(statusRaw: string, latency?: number, throwOnParseError?: boolean, disableJSONParse?: boolean) {
+        if(!disableJSONParse){
+            try {
+                this.status = JSON.parse(statusRaw);
+            } catch (err) {
+                if (throwOnParseError) throw err
+                this.status = null
+            }
+        } else this.status = null;
+
         this.statusRaw = statusRaw
         if (latency) {
             this.latency = latency
-        }
+        } else this.latency = null;
     }
-    latency?: number;
-    status?: uncertainObj;
+    latency: number | null;
+    status: DynamicObject | null;
     statusRaw: string;
 }
 
 
-type uncertainObj = {
+type DynamicObject = {
     [key: string]: any;
 };
  

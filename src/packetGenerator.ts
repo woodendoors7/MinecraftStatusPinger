@@ -1,6 +1,6 @@
 import varint from "./better-varint.js"
 const _protocolVersion = 753;
-import {Packet, ServerStatusOptions} from "./classes.js";
+import {Packet, ServerStatusOptions} from "./types.js";
 
 
 async function craftHandshake(hostname: String, port:number) {
@@ -22,7 +22,7 @@ async function craftHandshake(hostname: String, port:number) {
 
     return craftedHandshake
 }
-
+ 
 async function craftHandshakeBody(hostname: String, port: number) {
     // Field 1: The Protocol Version, (VarInt)
     // Field 2: The hostname of the server, (String) prefixed with it's length (VarInt)
