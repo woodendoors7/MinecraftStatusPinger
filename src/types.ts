@@ -19,8 +19,11 @@ export class Packet {
     crafted: PacketCrafted = {
         data: null,
         latency: null,
-    }
+    };
+    Error: Error = null;
 }
+
+//export type Packet = _Packet | Error;
 
 interface PacketStatus {
     handshakeBaked: boolean,
@@ -81,7 +84,7 @@ export class ServerStatus {
 }
 
 
-type DynamicObject = {
+export type DynamicObject = {
     [key: string]: any;
 };
  

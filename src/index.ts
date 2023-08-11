@@ -1,7 +1,7 @@
 import packetGen from "./packetGenerator.js"
 import packetDec from "./packetDecoder.js"
 import * as net from "net";
-import { Packet, ServerStatusOptions, ServerStatus } from "./types.js";
+import { Packet, ServerStatusOptions, ServerStatus, DynamicObject } from "./types.js";
 
 import { promises as dns } from 'dns';
 
@@ -23,9 +23,9 @@ import { promises as dns } from 'dns';
 
 async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
     return new Promise<ServerStatus>(async (resolve, reject) => {
- 
+
         let hostname = options.host || options.hostname;
-        if(!hostname) throw new Error("No hostname was provided!")
+        if (!hostname) return reject(new Error("No hostname was provided!"))
 
         let port = options.port != null ? options.port : 25565;
         let timeout = options.timeout != null ? options.timeout : 10000;
@@ -55,10 +55,21 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
             */
 
             packet = await packetDec.packetPipeline(chunk, packet)
+            if (packet.Error) {
+                clearTimeout(timeoutFunc)
+                return reject(packet.Error)
+            }
 
 
             if (packet.status.pingBaked || (packet.status.handshakeBaked && !ping)) {
-                let serverStatus = new ServerStatus(packet.crafted.data, packet.crafted.latency, throwOnParseError, disableJSONParse)
+                let serverStatus;
+                try {
+                    serverStatus = new ServerStatus(packet.crafted.data, packet.crafted.latency, throwOnParseError, disableJSONParse)
+                } catch (error) {
+                    clearTimeout(timeoutFunc);
+                    portal.destroy();
+                    return reject(error);
+                }
                 clearTimeout(timeoutFunc);
                 portal.destroy();
                 return resolve(serverStatus);
@@ -79,13 +90,12 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
 
         portal.once("error", (netError) => {
             clearTimeout(timeoutFunc);
-            reject();
-            throw netError
+            reject(netError);
         })
 
         let timeoutFunc = setTimeout(() => {
             portal.destroy();
-            throw new Error("Timed out.")
+            reject(new Error("Timed out."))
         }, timeout);
 
     })
@@ -107,9 +117,17 @@ async function setDnsServers(serverArray: Array<string>) {
     return true;
 }
 
-async function customLookup(hostname: string, options: Object, callback: CallableFunction) {
-    let result = await dns.lookup(hostname, options)
-    callback(null, result.address, result.family);
+async function customLookup(hostname: string, options: DynamicObject, callback: CallableFunction) {
+    let result = await dns.lookup(hostname, options).catch((e) => {
+        callback(e);
+    })
+
+    if (!result) return;
+    if (options?.all) callback(null, result)
+    else callback(null, result.address, result.family);
+
+
+
 }
 
 async function processSRV(hostname: string, port: number) {
@@ -121,7 +139,7 @@ async function processSRV(hostname: string, port: number) {
     if (hostname == "localhostname" && port != 25565 && net.isIP(hostname) != 0) return { hostname, port }
     let result = await dns.resolveSrv("_minecraft._tcp." + hostname).catch(() => { })
     if (!result || result.length == 0 || !result[0].name || !result[0].port) return { hostname, port }
-    return { hostname: result[0].name, port: result[0].port}
+    return { hostname: result[0].name, port: result[0].port }
 }
 
 export default { setDnsServers, lookup }

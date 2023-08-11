@@ -4,9 +4,7 @@
   <img src="https://papers.floppa.hair/mcstatuspinger/mcblock.png" alt="big MinecraftStatusPinger logo" width="600" border="0px"/>
 
 </div>
-
-
-<h3><code style="color: yellowgreen">A modern, small, performant, zero dependency TypeScript library specifically made for fast pinging and status-getting of Minecraft servers. (1.7+)</code></h3>
+<h3><code style="color: yellowgreen">A modern, small, performant, zero dependency TypeScript library made for fast pinging and status-getting of Minecraft servers. (1.7+)</code></h3>
 
 <hr>
 
@@ -19,9 +17,7 @@
 - Viewing Server **Version**
 - Fetching **Player Count** and **Playerlist**
 
-
 ## Getting started
-
 ### Requirements
 - NodeJS (used to run JavaScript code)
 - NPM (used to install Node packages)
@@ -52,7 +48,7 @@ let result = await mc.lookup({
     port: 25565,
     ping: true,
     timeout: 10000,
-    throwOnParseError: false,
+    throwOnParseError: true,
     disableSRV: false,
     disableJSONParse: false
 })
@@ -106,9 +102,16 @@ console.log(result);
   If you never changed the DNS settings of your computer, the default DNS server will be your ISP's.<br>
   <code style="color : darkorange">❗ I recommend changing your default DNS servers if you're doing thousands of lookups, for better performance.</code><br>
 
+### Changelog
+  
+   **[View Changelog](https://github.com/woodendoors7/MinecraftStatusPinger/blob/main/CHANGELOG.md)**,
+  Latest version: <i><code>v1.1.1</code></i>
+
+
+
 ### Contact
 
-If you have some questions, you can message me through Discord - woodendoors7
+If you have some questions, you can message me through Discord - **woodendoors7**
 
 ### Acknowledgements
 

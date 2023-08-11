@@ -11,7 +11,10 @@ async function packetPipeline(chunk: Buffer, packet: Packet) {
     chunk
   ])
 
-  if (Buffer.byteLength(packet.dataBuffer) > 102400) throw new Error("Maximum buffer size of 100 Kilobytes reached.\nThe status packet should be smaller than 20 Kilobytes.")
+  if (Buffer.byteLength(packet.dataBuffer) > 102400) {
+    packet.Error = new Error("Maximum buffer size of 100 Kilobytes reached.\nThe status packet should be smaller than 20 Kilobytes.")
+    return packet;
+  }
   if (!packet.meta.packetInitialized) packet = await craftPacketMeta(packet);
   if (packet.dataBuffer.length != packet.meta.fullLength) return packet;
   if (!packet.meta.fieldsCrafted) packet = await craftData(packet)
@@ -51,10 +54,12 @@ async function craftPacketMeta(packet: Packet) {
   packet.meta.packetID = varint.decode(packet.dataBuffer, varint.encodingLength(packet.meta.dataLength));
   packet.meta.metaLength = varint.encodingLength(packet.meta.dataLength) + varint.encodingLength(packet.meta.packetID);
 
-  if (packet.meta.dataLength == null || packet.meta.fullLength == null || packet.meta.packetID == null) throw new Error("Invalid packet was received.")
   packet.meta.metaCrafted = true;
   packet.meta.packetInitialized = true;
+
+  if (packet.meta.dataLength == null || packet.meta.fullLength == null || packet.meta.packetID == null) packet.Error = new Error("Invalid packet was received.")
+
   return packet;
-} 
+}
 
 export default { packetPipeline } 
