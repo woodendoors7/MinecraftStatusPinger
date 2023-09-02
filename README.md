@@ -2,7 +2,6 @@
 
 <div align="center">
   <img src="https://papers.floppa.hair/mcstatuspinger/mcblock.png" alt="big MinecraftStatusPinger logo" width="600" border="0px"/>
-
 </div>
 <h3><code style="color: yellowgreen">A modern, small, performant, zero dependency TypeScript library made for fast pinging and status-getting of Minecraft servers. (1.7+)</code></h3>
 
@@ -60,7 +59,7 @@ console.log(result);
 
 ## Docs
 
-<img src="https://papers.floppa.hair/mcstatuspinger/pleasestar.png" width="350">
+<img src="https://papers.floppa.hair/mcstatuspinger/pleasestar.png" alt="emoji holding a heart, pleading to star the repository" width="350">
 
 * <b id="lookupOptions">.lookup(): </b>*`((options: ServerStatusOptions) => Promise<ServerStatus>)`*
   * **options:** ServerStatusOptions
@@ -82,7 +81,7 @@ console.log(result);
     * <b>`latency?:`</b> number
       > The time it takes to send and receive a payload from the server. Will be null if `ping` option is false.
     * <b>`status?:`</b> DynamicObject
-      > Parsed status response from the sever. Will be null if the status fails to parse, or if disableJSONParse is true. <a  href="https://github.com/woodendoors7/MinecraftStatusPinger/blob/main/responseExample.md">Example of a valid Status Response.</a>
+      > Parsed status response from the sever. Will be null if the status fails to parse, or if disableJSONParse is true. <a href="https://github.com/woodendoors7/MinecraftStatusPinger/wiki/Valid-server-response-examples">Example of a valid Status Response.</a>
     * <b>`statusRaw:`</b> string
       > Raw status response in the form of a string. Useful when `status` fails to parse.
 
@@ -104,7 +103,7 @@ console.log(result);
 
 ### Changelog
   
-   **[View Changelog](https://github.com/woodendoors7/MinecraftStatusPinger/blob/main/CHANGELOG.md)**,
+   **[View Changelog](https://github.com/woodendoors7/MinecraftStatusPinger/wiki/Version-Changelog)**,
   Latest version: <i><code>v1.1.1</code></i>
 
 
