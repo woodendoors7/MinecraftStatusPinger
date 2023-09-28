@@ -1,9 +1,9 @@
 import packetGen from "./packetGenerator.js"
 import packetDec from "./packetDecoder.js"
-import * as net from "net";
+import * as net from "node:net";
 import { Packet, ServerStatusOptions, ServerStatus, DynamicObject } from "./types.js";
 
-import { promises as dns } from 'dns';
+import { promises as dns } from "node:dns";
 
 
 /**

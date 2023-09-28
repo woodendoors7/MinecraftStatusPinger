@@ -5,9 +5,11 @@
     "url": "https://github.com/woodendoors7/MinecraftStatusPinger.git"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
   ],
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "The best modern library for getting the ping and status of Minecraft servers, written in TypeScript with zero dependencies.",
   "keywords": [
     "minecraft status",
