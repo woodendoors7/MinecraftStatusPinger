@@ -7,7 +7,6 @@
 
 <hr>
 
-
 ### What can this be used for?
 
 - Getting server **Latency (ping)**
@@ -26,17 +25,16 @@
 npm install minecraftstatuspinger
 ```
 
-### Example
+### Basic Example
 ```typescript
 import mc from "minecraftstatuspinger";
 
 let result = await mc.lookup({ host: "mc.hypixel.net" })
-
 console.log(result);
 ```
 
 <details>
-<summary><h4>Advanced example!</h4></summary>
+<summary><h3>Advanced Example</h3></summary>
 <br>
 
 ```typescript
@@ -104,7 +102,7 @@ console.log(result);
 ### Changelog
   
    **[View Changelog](https://pinger.floppa.hair/changelog/)**,
-  Latest version: <i><code>v1.1.1</code></i>
+  Latest version: <i><code>v1.1.3</code></i>
 
 
 

@@ -1,5 +1,11 @@
 # Changelog!
 
+<h2>v1.1.3</h2>
+
+[NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.1.3)
+
+- 🛠️ Fixed  [Issue #1](https://github.com/woodendoors7/MinecraftStatusPinger/issues/1) of not being able to catch errors, by rejecting network errors instead of throwing them. 
+
 <h2>v1.1.2</h2>
 
 [NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.1.2)

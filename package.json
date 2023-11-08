@@ -5,11 +5,12 @@
     "url": "https://github.com/woodendoors7/MinecraftStatusPinger.git"
   },
   "files": [
+    "dist/",
     "dist",
     "README.md",
     "CHANGELOG.md"
   ],
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "The best modern library for getting the ping and status of Minecraft servers, written in TypeScript with zero dependencies.",
   "keywords": [
     "minecraft status",
@@ -19,7 +20,7 @@
     "minecraft"
   ],
   "author": "woodendoors_7",
-  "homepage": "https://github.com/woodendoors7/MinecraftStatusPinger#readme",
+  "homepage": "https://pinger.floppa.hair/",
   "bugs": {
     "url": "https://github.com/woodendoors7/MinecraftStatusPinger/issues"
   },
