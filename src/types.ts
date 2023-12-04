@@ -51,6 +51,7 @@ interface _ServerStatusOptions {
     port?: number
     timeout?: number
     ping?: boolean,
+    protocolVersion?: number,
     throwOnParseError?: boolean,
     disableSRV?: boolean,
     disableJSONParse?: boolean,

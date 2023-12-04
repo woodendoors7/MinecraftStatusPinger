@@ -44,6 +44,7 @@ let result = await mc.lookup({
     host: "mc.hypixel.net",
     port: 25565,
     ping: true,
+    protocolVersion: 764,
     timeout: 10000,
     throwOnParseError: true,
     disableSRV: false,
@@ -69,6 +70,8 @@ console.log(result);
       > Timeout of when an error is thrown after no response. Default is 10 seconds.
     * <b>`ping?:`</b> boolean <i>`default: true`</i>
       > Whether to send a payload at the end to get the latency of the server. If false, the `latency` field will be null.
+    * <b>`protocolVersion?:`</b> number <i>`default: 764`</i>
+      > Protocol version to send to the server to simulate different Minecraft client versions. Here, you can see the [Protocol Version Numbers](https://wiki.vg/Protocol_version_numbers). The current default protocol version is for 1.20.2 (764) and will be irregularly updated to newer versions.
     * <b>`throwOnParseError?:`</b> boolean <i>`default: true`</i>
       > Whether to throw an error if the status packet fails to parse the status field. The `statusRaw` field is always    included.
     * <b>`disableSrv?:`</b> boolean <i>`default: false`</i>
@@ -102,7 +105,7 @@ console.log(result);
 ### Changelog
   
    **[View Changelog](https://pinger.floppa.hair/changelog/)**,
-  Latest version: <i><code>v1.1.3</code></i>
+  Latest version: <i><code>v1.1.4</code></i>
 
 
 

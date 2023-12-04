@@ -15,6 +15,7 @@ async function packetPipeline(chunk: Buffer, packet: Packet) {
     packet.Error = new Error("Maximum buffer size of 100 Kilobytes reached.\nThe status packet should be smaller than 20 Kilobytes.")
     return packet;
   }
+
   if (!packet.meta.packetInitialized) packet = await craftPacketMeta(packet);
   if (packet.dataBuffer.length != packet.meta.fullLength) return packet;
   if (!packet.meta.fieldsCrafted) packet = await craftData(packet)

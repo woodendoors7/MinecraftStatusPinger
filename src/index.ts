@@ -11,12 +11,15 @@ import { promises as dns } from "node:dns";
  * @example
  * Here's a simple example:
  * ```
- * let result = await mc.lookup("mc.hypixel.net", {
+ * let result = await mc.lookup({
+ *    host: "mc.hypixel.net"
  *    port: 25565,
- *    ping: true,
  *    timeout: 10000,
+ *    ping: true,
+ *    protocolVersion: 764
  *    throwOnParseError: false,
- *    disableSRV: false
+ *    disableSRV: false,
+ *    disableJSONParse: false
  * })
  * ```
  */
@@ -30,6 +33,7 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
         let port = options.port != null ? options.port : 25565;
         let timeout = options.timeout != null ? options.timeout : 10000;
         let ping = options.ping != null ? options.ping : true;
+        let protocolVersion = options.protocolVersion != null ? options.protocolVersion : 764;
         let throwOnParseError = options.throwOnParseError != null ? options.throwOnParseError : true;
         let disableSRV = options.disableSRV != null ? options.disableSRV : false;
         let disableJSONParse = options.disableJSONParse != null ? options.disableJSONParse : false;
@@ -39,7 +43,7 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
 
         let portal = net.createConnection({ port: port, host: hostname, lookup: customLookup }, async () => {
             // Send first the handshake, and then the status request to the server.
-            let handshake = await packetGen.craftHandshake(hostname, port);
+            let handshake = await packetGen.craftHandshake(hostname, port, protocolVersion);
             let statusRequest = await packetGen.craftEmptyPacket(0);
             portal.write(handshake);
             portal.write(statusRequest);

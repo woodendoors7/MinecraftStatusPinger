@@ -1,10 +1,10 @@
 import varint from "./better-varint.js"
-const _protocolVersion = 753;
+
 import {Packet, ServerStatusOptions} from "./types.js";
 
 
-async function craftHandshake(hostname: String, port:number) {
-    let packetBody = await craftHandshakeBody(hostname, port);
+async function craftHandshake(hostname: String, port: number, protocolVersion: number) {
+    let packetBody = await craftHandshakeBody(hostname, port, protocolVersion);
 
     // Field 1: Length of the entire object, (VarInt)
     // Field 2: PacketID, (VarInt)
@@ -23,14 +23,14 @@ async function craftHandshake(hostname: String, port:number) {
     return craftedHandshake
 }
  
-async function craftHandshakeBody(hostname: String, port: number) {
+async function craftHandshakeBody(hostname: String, port: number, protocolVersion: number) {
     // Field 1: The Protocol Version, (VarInt)
     // Field 2: The hostname of the server, (String) prefixed with it's length (VarInt)
     // Field 3: The port of the server, (UInt16)
     // Field 4: Next expected state, whether to get the status (1) or login (2), (VarInt)
-    let protocolVersionBuffer = Buffer.from(varint.encode(_protocolVersion));
+    let protocolVersionBuffer = Buffer.from(varint.encode(protocolVersion));
     let hostnamePrefixBuffer = Buffer.from(varint.encode(hostname.length));
-    let hostnameBuffer = Buffer.from(hostname, 'utf8');
+    let hostnameBuffer = Buffer.from(hostname, "utf8");
     let portBuffer = Buffer.allocUnsafe(2)
     portBuffer.writeUInt16BE(port, 0)
     let nextStateBuffer = Buffer.from(varint.encode(1))

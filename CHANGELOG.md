@@ -1,5 +1,12 @@
 # Changelog!
 
+
+<h2>v1.1.4</h2>
+
+[NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.1.4)
+
+- 🟢 Added lookup option `protocolVersion` to send requests as different Minecraft versions.
+
 <h2>v1.1.3</h2>
 
 [NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.1.3)
@@ -10,7 +17,7 @@
 
 [NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.1.2)
 
-- 🛠️ Changed imports to prefix with `node:` so this package can be properly used with [Deno](https://deno.com/). 
+- 🛠️ Changed imports to prefix with `node:` so this package can be used with [Deno](https://deno.com/). 
 - ⚙️ Standardized quotes from single quotes to double quotes 
 
 <h2>v1.1.1</h2>
