@@ -3,7 +3,7 @@
 <div align="center">
   <img src="https://papers.floppa.hair/mcstatuspinger/mcblock.png" alt="big MinecraftStatusPinger logo" width="600" border="0px"/>
 </div>
-<h3><code style="color: yellowgreen">A modern, small, performant, zero dependency TypeScript library made for fast pinging and status-getting of Minecraft servers</code></h3>
+<h3><code style="color: yellowgreen">A modern, small, performant, zero dependency TypeScript library made for fast pinging and getting status of Minecraft servers</code></h3>
 
 <hr>
 
@@ -15,6 +15,7 @@
 - Viewing Server **Version**
 - Fetching **Player Count** and **Playerlist**
 
+**And in general, checking the status of Minecraft servers!**
 ## Getting started
 ### Requirements
 - NodeJS or Deno (used to run JavaScript code)
