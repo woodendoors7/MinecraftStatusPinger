@@ -106,7 +106,7 @@ console.log(result);
 ### Changelog
   
    **[View Changelog](https://pinger.floppa.hair/changelog/)**,
-  Latest version: <b><i><code>v1.1.4</code></i></b>
+  Latest version: <b><i><code>v1.1.5</code></i></b>
 
 
 

@@ -9,7 +9,7 @@
     "CHANGELOG.md",
     "README.md"
   ],
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "The best modern library for getting the ping and status of Minecraft servers, written in TypeScript with zero dependencies.",
   "keywords": [
     "minecraft status",

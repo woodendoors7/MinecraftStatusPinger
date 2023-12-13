@@ -87,8 +87,8 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
             if (packet.status.handshakeBaked && !packet.status.pingSent) {
                 let pingRequest = await packetGen.craftPingPacket()
                 packet.status.pingSentTime = Date.now();
-                await portal.write(pingRequest)
                 packet.status.pingSent = true;
+                await portal.write(pingRequest);
             }
         })
 

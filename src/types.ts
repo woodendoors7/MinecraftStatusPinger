@@ -75,7 +75,7 @@ export class ServerStatus {
         } else this.status = null;
 
         this.statusRaw = statusRaw
-        if (latency) {
+        if (latency != null) {
             this.latency = latency
         } else this.latency = null;
     }
