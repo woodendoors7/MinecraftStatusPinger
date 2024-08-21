@@ -122,7 +122,8 @@ If you have some questions, you can message me through Discord - **woodendoors7*
 ### To-do
 
 - [x] Do SRV lookups
-- [ ] Support versions less than 1.7.
+- [ ] Parse MOTDs 
+- [ ] Support versions less than 1.7. 
 - [ ] Support Bedrock
 
 
