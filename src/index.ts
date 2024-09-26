@@ -116,7 +116,7 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
     // Cloudflare is the fastest for DNS queries in most of the world.
 ```
  */
-async function setDnsServers(serverArray: Array<string>) {
+async function setDnsServers(serverArray: Array<string>): Promise<boolean> {
     await dns.setServers(serverArray);
     return true;
 }
