@@ -9,6 +9,8 @@
 * I generated this with ChatGPT, let's hope it works.
 */
 
+import { Buffer } from 'node:buffer';
+
 function encode(num: number): Buffer {
     const bytes: number[] = [];
     do {

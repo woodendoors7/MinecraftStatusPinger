@@ -32,7 +32,9 @@ import mc from "minecraftstatuspinger";
 
 let result = await mc.lookup({ host: "mc.hypixel.net" })
 console.log(result);
-```
+``` 
+
+
 
 <details>
 <summary><h3>Advanced Example</h3></summary>
@@ -48,12 +50,13 @@ let result = await mc.lookup({
     protocolVersion: 764,
     timeout: 10000,
     throwOnParseError: true,
-    disableSRV: false,
-    disableJSONParse: false
+    SRVLookup: true,
+    JSONParse: true
 })
 
 console.log(result);
 ```
+
 
 </details>
 
@@ -75,10 +78,10 @@ console.log(result);
       > Protocol version to send to the server to simulate different Minecraft client versions. Here, you can see the [Protocol Version Numbers](https://wiki.vg/Protocol_version_numbers). The current default protocol version is for 1.20.2 (764) and will be irregularly updated to newer versions.
     * <b>`throwOnParseError?:`</b> boolean <i>`default: true`</i>
       > Whether to throw an error if the status packet fails to parse the status field. The `statusRaw` field is always included.
-    * <b>`disableSrv?:`</b> boolean <i>`default: false`</i>
-      > Whether to force skip SRV lookups. Useful when only pinging IP addresses and not hostnames (domains).
-    * <b>`disableJSONParse?:`</b> boolean <i>`default: false`</i>
-      > Whether to skip JSON parsing. Useful if you only want a raw plaintext response. If true, the `status` field will be undefined.
+    * <b>`SRVLookup?:`</b> boolean <i>`default: true`</i>
+      > Whether to perform a SRV lookup on the provided hostname. Set to `true` in order to skip. Useful to disable when you're only looking up the basic DNS records and a server with a specific port.
+    * <b>`JSONParse?:`</b> boolean <i>`default: true`</i>
+      > Whether to parse the JSON `status` field. Useful to disable when you only need the raw plaintext response. If false, the `status` field will be null.
   * ServerStatus
     * <b>`latency?:`</b> number
       > The time it takes to receive back a response after sending a small payload to a server, in milliseconds. Will be null if the `ping` option is false.

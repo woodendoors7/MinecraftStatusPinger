@@ -1,7 +1,7 @@
-import packetGen from "./packetGenerator.js"
-import packetDec from "./packetDecoder.js"
+import packetGen from "./packetGenerator.ts"
+import packetDec from "./packetDecoder.ts"
 import * as net from "node:net";
-import { Packet, ServerStatusOptions, ServerStatus, DynamicObject } from "./types.js";
+import { Packet, ServerStatusOptions, ServerStatus, DynamicObject } from "./types.ts";
 
 import { promises as dns } from "node:dns";
 
@@ -18,8 +18,8 @@ import { promises as dns } from "node:dns";
  *    ping: true,
  *    protocolVersion: 764
  *    throwOnParseError: false,
- *    disableSRV: false,
- *    disableJSONParse: false
+ *    SRVLookup: true,
+ *    JSONParse: true
  * })
  * ```
  */
@@ -33,11 +33,12 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
         let port = options.port != null ? options.port : 25565;
         let timeout = options.timeout != null ? options.timeout : 10000;
         let ping = options.ping != null ? options.ping : true;
-        let protocolVersion = options.protocolVersion != null ? options.protocolVersion : 764;
+        let protocolVersion = options.protocolVersion != null ? options.protocolVersion : 767;
         let throwOnParseError = options.throwOnParseError != null ? options.throwOnParseError : true;
-        let disableSRV = options.disableSRV != null ? options.disableSRV : false;
-        let disableJSONParse = options.disableJSONParse != null ? options.disableJSONParse : false;
-        if (!disableSRV) ({ hostname, port } = await processSRV(hostname, port))
+        let SRVLookup = options.SRVLookup != null ? options.SRVLookup : true;
+        let JSONParse = options.JSONParse != null ? options.JSONParse : true;
+        console.log(port)
+        if (SRVLookup) ({ hostname, port } = await processSRV(hostname, port))
         // Default port of 25565, default timeout of 10 seconds.
         // Ping is sent by default. 
 
@@ -68,7 +69,7 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
             if (packet.status.pingBaked || (packet.status.handshakeBaked && !ping)) {
                 let serverStatus;
                 try {
-                    serverStatus = new ServerStatus(packet.crafted.data, packet.crafted.latency, throwOnParseError, disableJSONParse)
+                    serverStatus = new ServerStatus(packet.crafted.data, packet.crafted.latency, throwOnParseError, JSONParse)
                 } catch (error) {
                     clearTimeout(timeoutFunc);
                     portal.destroy();
@@ -140,7 +141,8 @@ async function processSRV(hostname: string, port: number) {
      *  The hostname can't be localhostname, the port always has to be 25565, and the hostname cannot be an IP. 
     */
 
-    if (hostname == "localhostname" && port != 25565 && net.isIP(hostname) != 0) return { hostname, port }
+
+    if (port != 25565 || net.isIP(hostname) != 0) return { hostname, port }
     let result = await dns.resolveSrv("_minecraft._tcp." + hostname).catch(() => { })
     if (!result || result.length == 0 || !result[0].name || !result[0].port) return { hostname, port }
     return { hostname: result[0].name, port: result[0].port }

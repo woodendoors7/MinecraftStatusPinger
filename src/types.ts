@@ -23,7 +23,6 @@ export class Packet {
     Error: Error = null;
 }
 
-//export type Packet = _Packet | Error;
 
 interface PacketStatus {
     handshakeBaked: boolean,
@@ -53,8 +52,8 @@ interface _ServerStatusOptions {
     ping?: boolean,
     protocolVersion?: number,
     throwOnParseError?: boolean,
-    disableSRV?: boolean,
-    disableJSONParse?: boolean,
+    SRVLookup?: boolean,
+    JSONParse?: boolean,
 }
 
 type NotBoth =
@@ -64,8 +63,8 @@ type NotBoth =
 export type ServerStatusOptions = _ServerStatusOptions & NotBoth;
 
 export class ServerStatus {
-    constructor(statusRaw: string, latency?: number, throwOnParseError?: boolean, disableJSONParse?: boolean) {
-        if(!disableJSONParse){
+    constructor(statusRaw: string, latency?: number, throwOnParseError?: boolean, JSONParse?: boolean) {
+        if(JSONParse){
             try {
                 this.status = JSON.parse(statusRaw);
             } catch (err) {

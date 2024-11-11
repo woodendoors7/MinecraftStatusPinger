@@ -1,6 +1,17 @@
 # Changelog!
 
 
+<h2>v1.2.0</h2>
+
+[NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.2.0)
+
+- ⚙️ Changed `disableSrv` and `disableJSONParse` to `SRVLookup` and `JSONParse` respectively, changing their default values to true. 
+- ⚙️ Bumped the default protocol version from `764` (1.20.2) to `767` (1.21.1)
+- 🛠️ Changed uncompiled `.js` imports to `.ts`, making it work with Deno.
+- 🛠️ Added jsr.json file
+- 🛠️ Fixed SRV lookups not being prevented when port wasn't set 25565/was an IP
+- ➖ Removed (previously disfunctional) soft block on localhost addresses when looking up SRV. Code will initiate a SRV lookup with any localhost address, unless disabled with `SRVLookup`.
+ 
 <h2>v1.1.5</h2>
 
 [NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.1.5)
@@ -40,6 +51,6 @@
 [NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.1.0)
 
  - 🟢 Added lookup option `disableJSONParse` to completely skip parsing JSON.
-  - ⚙️ Renamed primary lookup option `hostname` to `host`, `hostname` stays as an alias.
+ - ⚙️ Renamed primary lookup option `hostname` to `host`, `hostname` stays as an alias.
 
 [all versions](https://www.npmjs.com/package/minecraftstatuspinger?activeTab=versions)

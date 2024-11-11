@@ -1,6 +1,4 @@
-import varint from "./better-varint.js"
-
-import {Packet, ServerStatusOptions} from "./types.js";
+import varint from "./better-varint.ts"
 
 
 async function craftHandshake(hostname: String, port: number, protocolVersion: number) {
