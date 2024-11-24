@@ -28,16 +28,17 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
     return new Promise<ServerStatus>(async (resolve, reject) => {
 
         let hostname = options.host || options.hostname;
-        if (!hostname) return reject(new Error("No hostname was provided!"))
+        if (!hostname) return reject(new Error("No hostname was provided!"));
 
         let port = options.port != null ? options.port : 25565;
+        if(port < 0 || port > 65535) return reject(new Error("Port number must be between 0 and 25565!"));
+
         let timeout = options.timeout != null ? options.timeout : 10000;
         let ping = options.ping != null ? options.ping : true;
         let protocolVersion = options.protocolVersion != null ? options.protocolVersion : 767;
         let throwOnParseError = options.throwOnParseError != null ? options.throwOnParseError : true;
         let SRVLookup = options.SRVLookup != null ? options.SRVLookup : true;
         let JSONParse = options.JSONParse != null ? options.JSONParse : true;
-        console.log(port)
         if (SRVLookup) ({ hostname, port } = await processSRV(hostname, port))
         // Default port of 25565, default timeout of 10 seconds.
         // Ping is sent by default. 
@@ -45,13 +46,16 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
         let portal = net.createConnection({ port: port, host: hostname, lookup: customLookup }, async () => {
             // Send first the handshake, and then the status request to the server.
             let handshake = await packetGen.craftHandshake(hostname, port, protocolVersion);
+
             let statusRequest = await packetGen.craftEmptyPacket(0);
+
             portal.write(handshake);
             portal.write(statusRequest);
+
         })
 
         let packet = new Packet();
-        portal.on("data", async (chunk) => {
+        portal.on("data", async (_chunk) => {
 
             /* 
                 Pass every new chunk of data sent from the server into the pipeline,
@@ -59,6 +63,7 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
                 The pipeline returns the packet object, with changes made from processing the data chunk. 
             */
 
+            let chunk = new Uint8Array(<any>_chunk);
             packet = await packetDec.packetPipeline(chunk, packet)
             if (packet.Error) {
                 clearTimeout(timeoutFunc)

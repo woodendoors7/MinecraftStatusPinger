@@ -14,8 +14,8 @@ export class Packet {
         fullLength: null,
         metaLength: null,
     }
-    dataBuffer = Buffer.alloc(0);
-    fieldsBuffer = Buffer.alloc(0);
+    dataBuffer: Uint8Array;
+    fieldsBuffer: Uint8Array;
     crafted: PacketCrafted = {
         data: null,
         latency: null,
