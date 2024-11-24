@@ -1,17 +1,17 @@
-import varint from "./better-varint.ts"
+import varint from "./utils-varint.ts"
 import { Packet } from "./types.ts";
 
 
-async function packetPipeline(chunk: Buffer, packet: Packet) {
+async function packetPipeline(chunk: Uint8Array, packet: Packet) {
   // Wait for and Collect all the data coming from the server.
   if (packet.status.pingSent) return await craftLatency(packet);
 
-  packet.dataBuffer = await Buffer.concat([
+  packet.dataBuffer = await varint.concatUI8([
     packet.dataBuffer,
     chunk
   ])
 
-  if (Buffer.byteLength(packet.dataBuffer) > 102400) {
+  if (packet.dataBuffer.length > 102400) {
     packet.Error = new Error("Maximum buffer size of 100 Kilobytes reached.\nThe status packet should be smaller than 20 Kilobytes.")
     return packet;
   }
@@ -41,7 +41,7 @@ async function craftData(packet: Packet) {
   packet.fieldsBuffer = packet.dataBuffer.slice(packet.meta.metaLength)
   let fieldLength = varint.decode(packet.fieldsBuffer)
   packet.fieldsBuffer = packet.fieldsBuffer.slice(varint.encodingLength(fieldLength));
-  packet.crafted.data = packet.fieldsBuffer.toString();
+  packet.crafted.data = new TextDecoder().decode(packet.fieldsBuffer); 
   packet.status.handshakeBaked = true;
   return packet;
 }

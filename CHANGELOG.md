@@ -3,18 +3,20 @@
 
 <h2>v1.2.0</h2>
 
-[NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.2.0)
+<sup>[NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.2.0) | [JSR](https://jsr.io/@minecraft/minecraftstatuspinger@1.2.0)</sup>
 
 - ⚙️ Changed `disableSrv` and `disableJSONParse` to `SRVLookup` and `JSONParse` respectively, changing their default values to true. 
+- ⚙️ Changed all `Buffer`s to `Uint8Array`s, improving compatibility throughout runtimes.
 - ⚙️ Bumped the default protocol version from `764` (1.20.2) to `767` (1.21.1)
+- 🛠️ Added hard limit on port property
 - 🛠️ Changed uncompiled `.js` imports to `.ts`, making it work with Deno.
 - 🛠️ Added jsr.json file
 - 🛠️ Fixed SRV lookups not being prevented when port wasn't set 25565/was an IP
-- ➖ Removed (previously disfunctional) soft block on localhost addresses when looking up SRV. Code will initiate a SRV lookup with any localhost address, unless disabled with `SRVLookup`.
+- ➖ Removed (previously dysfunctional) soft block on localhost addresses when looking up SRV. Code will initiate a SRV lookup with any local address, has to be disabled with `SRVLookup`.
  
 <h2>v1.1.5</h2>
 
-[NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.1.5)
+<sup>[NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.1.5) | [JSR](https://jsr.io/@minecraft/minecraftstatuspinger@1.1.5)</sup>
 
 - 🛠️ Fixed latency being returned as `null` instead of zero.
 
@@ -53,4 +55,4 @@
  - 🟢 Added lookup option `disableJSONParse` to completely skip parsing JSON.
  - ⚙️ Renamed primary lookup option `hostname` to `host`, `hostname` stays as an alias.
 
-[all versions](https://www.npmjs.com/package/minecraftstatuspinger?activeTab=versions)
+All versions: [NPM](https://www.npmjs.com/package/minecraftstatuspinger?activeTab=versions) | [JSR](https://jsr.io/@minecraft/minecraftstatuspinger/versions)

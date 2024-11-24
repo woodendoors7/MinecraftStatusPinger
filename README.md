@@ -1,3 +1,11 @@
+[![GitHub Link badge](https://badgen.net/badge/icon/GitHub?icon=github&label&color=010409)](https://github.com/woodendoors7/minecraftstatuspinger)
+[![NPM link badge](https://badgen.net/badge/icon/NPM?icon=JS&label&color=a00a0b)](https://www.npmjs.com/package/minecraftstatuspinger)
+[![JSR link badge](https://badgen.net/badge/color/JSR/?label=&color=d2a404)](https://jsr.io/@minecraft/minecraftstatuspinger)
+[![Web link badge](https://badgen.net/badge/icon/Web?icon=JS&label)](https://pinger.floppa.hair)
+
+
+
+
 
 
 <div align="center">
@@ -6,6 +14,13 @@
 <h3><code style="color: yellowgreen">A modern, small, fast, performant, zero dependency TypeScript library made for pinging and getting status of Minecraft servers.</code></h3>
 
 <hr>
+
+
+![NPM Version](https://badgen.net/npm/v/minecraftstatuspinger)
+![TS Types](https://badgen.net/npm/types/minecraftstatuspinger)
+![License](https://badgen.net/npm/license/minecraftstatuspinger)
+![NPM Downloads](https://badgen.net/npm/dy/minecraftstatuspinger/?color=00a600)
+![Maintained?](https://badgen.net/static/Maintained%3F/Yes/00a600)
 
 ### What can this be used for?
 
@@ -34,8 +49,6 @@ let result = await mc.lookup({ host: "mc.hypixel.net" })
 console.log(result);
 ``` 
 
-
-
 <details>
 <summary><h3>Advanced Example</h3></summary>
 <br>
@@ -47,7 +60,7 @@ let result = await mc.lookup({
     host: "mc.hypixel.net",
     port: 25565,
     ping: true,
-    protocolVersion: 764,
+    protocolVersion: 767,
     timeout: 10000,
     throwOnParseError: true,
     SRVLookup: true,
@@ -56,7 +69,6 @@ let result = await mc.lookup({
 
 console.log(result);
 ```
-
 
 </details>
 
@@ -74,8 +86,8 @@ console.log(result);
       > How long until an error is thrown if the transaction still hasn't finished. Default is 10 seconds.
     * <b>`ping?:`</b> boolean <i>`default: true`</i>
       > Whether to send a payload at the end to measure the server latency. If false, the `latency` field will be null.
-    * <b>`protocolVersion?:`</b> number <i>`default: 764`</i>
-      > Protocol version to send to the server to simulate different Minecraft client versions. Here, you can see the [Protocol Version Numbers](https://wiki.vg/Protocol_version_numbers). The current default protocol version is for 1.20.2 (764) and will be irregularly updated to newer versions.
+    * <b>`protocolVersion?:`</b> number <i>`default: 767`</i>
+      > Protocol version to send to the server to simulate different Minecraft client versions. Here, you can see the [Protocol Version Numbers](https://wiki.vg/Protocol_version_numbers). The current default protocol version is for 1.21.1 (767) and will be irregularly updated to newer versions.
     * <b>`throwOnParseError?:`</b> boolean <i>`default: true`</i>
       > Whether to throw an error if the status packet fails to parse the status field. The `statusRaw` field is always included.
     * <b>`SRVLookup?:`</b> boolean <i>`default: true`</i>
@@ -109,7 +121,7 @@ console.log(result);
 ### Changelog
   
    **[View Changelog](https://pinger.floppa.hair/changelog/)**,
-  Latest version: <b><i><code>v1.1.5</code></i></b>
+  Latest version: <b><i><code>v1.2.0</code></i></b>
 
 
 

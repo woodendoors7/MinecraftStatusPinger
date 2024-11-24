@@ -1,5 +1,6 @@
 {
   "name": "@minecraft/minecraftstatuspinger",
   "version": "1.2.0",
-  "exports": "./src/index.ts"
+  "exports": "./src/index.ts",
+  "compilerOptions":{"strictNullChecks": false}
 }
