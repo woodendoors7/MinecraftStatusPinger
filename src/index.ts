@@ -16,15 +16,14 @@ import { promises as dns } from "node:dns";
  *    port: 25565,
  *    timeout: 10000,
  *    ping: true,
- *    protocolVersion: 764
+ *    protocolVersion: 767
  *    throwOnParseError: false,
  *    SRVLookup: true,
  *    JSONParse: true
  * })
  * ```
  */
-
-async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
+export async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
     return new Promise<ServerStatus>(async (resolve, reject) => {
 
         let hostname = options.host || options.hostname;
@@ -122,7 +121,7 @@ async function lookup(options?: ServerStatusOptions): Promise<ServerStatus> {
     // Cloudflare is the fastest for DNS queries in most of the world.
 ```
  */
-async function setDnsServers(serverArray: Array<string>): Promise<boolean> {
+export async function setDnsServers(serverArray: Array<string>): Promise<boolean> {
     await dns.setServers(serverArray);
     return true;
 }
@@ -135,9 +134,6 @@ async function customLookup(hostname: string, options: DynamicObject, callback: 
     if (!result) return;
     if (options?.all) callback(null, result)
     else callback(null, result.address, result.family);
-
-
-
 }
 
 async function processSRV(hostname: string, port: number) {
@@ -153,4 +149,7 @@ async function processSRV(hostname: string, port: number) {
     return { hostname: result[0].name, port: result[0].port }
 }
 
+/**
+ * The default export, containing setDnsServers and lookup
+ */
 export default { setDnsServers, lookup }

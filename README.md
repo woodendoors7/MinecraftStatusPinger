@@ -4,17 +4,12 @@
 [![Web link badge](https://badgen.net/badge/icon/Web?icon=JS&label)](https://pinger.floppa.hair)
 
 
-
-
-
-
 <div align="center">
   <img src="https://papers.floppa.hair/mcstatuspinger/mcblock.png" alt="big MinecraftStatusPinger logo" width="600" border="0px"/>
 </div>
 <h3><code style="color: yellowgreen">A modern, small, fast, performant, zero dependency TypeScript library made for pinging and getting status of Minecraft servers.</code></h3>
 
 <hr>
-
 
 ![NPM Version](https://badgen.net/npm/v/minecraftstatuspinger)
 ![TS Types](https://badgen.net/npm/types/minecraftstatuspinger)
@@ -121,7 +116,7 @@ console.log(result);
 ### Changelog
   
    **[View Changelog](https://pinger.floppa.hair/changelog/)**,
-  Latest version: <b><i><code>v1.2.0</code></i></b>
+  Latest version: <b><i><code>v1.2.1</code></i></b>
 
 
 

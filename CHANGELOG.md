@@ -1,5 +1,10 @@
 # Changelog!
 
+<h2>v1.2.1</h2>
+
+<sup>[NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.2.1) | [JSR](https://jsr.io/@minecraft/minecraftstatuspinger@1.2.1)</sup>
+
+- 🟢 Exported `lookup` and `setDnsServers` individually, alongside the default export containing both.
 
 <h2>v1.2.0</h2>
 
@@ -8,9 +13,9 @@
 - ⚙️ Changed `disableSrv` and `disableJSONParse` to `SRVLookup` and `JSONParse` respectively, changing their default values to true. 
 - ⚙️ Changed all `Buffer`s to `Uint8Array`s, improving compatibility throughout runtimes.
 - ⚙️ Bumped the default protocol version from `764` (1.20.2) to `767` (1.21.1)
-- 🛠️ Added hard limit on port property
+- ⚙️ Added hard limit on port property
+- ⚙️ Added jsr.json file
 - 🛠️ Changed uncompiled `.js` imports to `.ts`, making it work with Deno.
-- 🛠️ Added jsr.json file
 - 🛠️ Fixed SRV lookups not being prevented when port wasn't set 25565/was an IP
 - ➖ Removed (previously dysfunctional) soft block on localhost addresses when looking up SRV. Code will initiate a SRV lookup with any local address, has to be disabled with `SRVLookup`.
  

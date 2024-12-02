@@ -9,7 +9,7 @@
     "CHANGELOG.md",
     "README.md"
   ],
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A modern library for pinging Minecraft servers and getting their status and playerlist, written in TypeScript with zero dependencies.",
   "keywords": [
     "minecraft status",
