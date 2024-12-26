@@ -54,6 +54,7 @@ interface _ServerStatusOptions {
     throwOnParseError?: boolean,
     SRVLookup?: boolean,
     JSONParse?: boolean,
+    HAProxy?: boolean
 }
 
 type NotBoth =

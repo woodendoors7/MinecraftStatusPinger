@@ -19,7 +19,8 @@ import { promises as dns } from "node:dns";
  *    protocolVersion: 767
  *    throwOnParseError: false,
  *    SRVLookup: true,
- *    JSONParse: true
+ *    JSONParse: true,
+ *    HAProxy: false
  * })
  * ```
  */
@@ -38,14 +39,23 @@ export async function lookup(options?: ServerStatusOptions): Promise<ServerStatu
         let throwOnParseError = options.throwOnParseError != null ? options.throwOnParseError : true;
         let SRVLookup = options.SRVLookup != null ? options.SRVLookup : true;
         let JSONParse = options.JSONParse != null ? options.JSONParse : true;
+        let HAProxy = options.HAProxy != null ? options.HAProxy : false;
         if (SRVLookup) ({ hostname, port } = await processSRV(hostname, port))
         // Default port of 25565, default timeout of 10 seconds.
         // Ping is sent by default. 
 
         let portal = net.createConnection({ port: port, host: hostname, lookup: customLookup }, async () => {
-            // Send first the handshake, and then the status request to the server.
-            let handshake = await packetGen.craftHandshake(hostname, port, protocolVersion);
+            // 1. Send HAProxy message if enabled
+            // 2. Send handshake
+            // 3. Send status request
 
+            if (HAProxy) {
+                // I don't know what other data I could send, so just send local IP and 0
+                let HAProxyMessage = packetGen.craftHAProxyMessagePacket("127.0.0.1", '127.0.0.1', 0, port);
+                portal.write(HAProxyMessage);
+            }
+
+            let handshake = await packetGen.craftHandshake(hostname, port, protocolVersion);
             let statusRequest = await packetGen.craftEmptyPacket(0);
 
             portal.write(handshake);

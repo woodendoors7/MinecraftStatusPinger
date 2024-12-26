@@ -59,7 +59,8 @@ let result = await mc.lookup({
     timeout: 10000,
     throwOnParseError: true,
     SRVLookup: true,
-    JSONParse: true
+    JSONParse: true,
+    HAProxy: false
 })
 
 console.log(result);
@@ -89,6 +90,8 @@ console.log(result);
       > Whether to perform a SRV lookup on the provided hostname. Set to `true` in order to skip. Useful to disable when you're only looking up the basic DNS records and a server with a specific port.
     * <b>`JSONParse?:`</b> boolean <i>`default: true`</i>
       > Whether to parse the JSON `status` field. Useful to disable when you only need the raw plaintext response. If false, the `status` field will be null.
+    * <b>`HAProxy?:`</b> boolean <i>`default: false`</i>
+      > Whether to send a HAProxy protocol header to the server. Useful when the server is behind a HAProxy load balancer. If true, the `status` field will be null.
   * ServerStatus
     * <b>`latency?:`</b> number
       > The time it takes to receive back a response after sending a small payload to a server, in milliseconds. Will be null if the `ping` option is false.

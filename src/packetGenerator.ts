@@ -79,6 +79,40 @@ async function craftPingPacket() {
     return craftedPacket;
 }
 
+export function craftHAProxyMessagePacket(
+    sourceIP: string,
+    destIP: string,
+    sourcePort: number,
+    destPort: number
+): Buffer {
+    const signature = Buffer.from('0D0A0D0A000D0A515549540A', 'hex'); // HAProxy v2 signature
+    const versionCommand = 0x21; // Version 2, command PROXY
+    const protocol = 0x11; // TCP over IPv4
+
+    // Convert IP addresses and ports to binary format
+    const sourceIPParts = sourceIP.split('.').map(part => parseInt(part, 10));
+    const destIPParts = destIP.split('.').map(part => parseInt(part, 10));
+
+    const sourcePortBuffer = Buffer.alloc(2);
+    sourcePortBuffer.writeUInt16BE(sourcePort);
+
+    const destPortBuffer = Buffer.alloc(2);
+    destPortBuffer.writeUInt16BE(destPort);
+
+    const addresses = Buffer.concat([
+        Buffer.from(sourceIPParts),
+        Buffer.from(destIPParts),
+        sourcePortBuffer,
+        destPortBuffer
+    ]);
+
+    const length = addresses.length;
+    const lengthBuffer = Buffer.alloc(2);
+    lengthBuffer.writeUInt16BE(length);
+
+    return Buffer.concat([signature, Buffer.from([versionCommand, protocol]), lengthBuffer, addresses]);
+}
 
 
-export default { craftHandshake, craftEmptyPacket, craftPingPacket } 
+
+export default { craftHandshake, craftEmptyPacket, craftPingPacket, craftHAProxyMessagePacket } 
