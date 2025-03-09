@@ -16,7 +16,7 @@ import { promises as dns } from "node:dns";
  *    port: 25565,
  *    timeout: 10000,
  *    ping: true,
- *    protocolVersion: 767
+ *    protocolVersion: 769
  *    throwOnParseError: false,
  *    SRVLookup: true,
  *    JSONParse: true
@@ -34,7 +34,7 @@ export async function lookup(options?: ServerStatusOptions): Promise<ServerStatu
 
         let timeout = options.timeout != null ? options.timeout : 10000;
         let ping = options.ping != null ? options.ping : true;
-        let protocolVersion = options.protocolVersion != null ? options.protocolVersion : 767;
+        let protocolVersion = options.protocolVersion != null ? options.protocolVersion : 769;
         let throwOnParseError = options.throwOnParseError != null ? options.throwOnParseError : true;
         let SRVLookup = options.SRVLookup != null ? options.SRVLookup : true;
         let JSONParse = options.JSONParse != null ? options.JSONParse : true;
@@ -84,9 +84,10 @@ export async function lookup(options?: ServerStatusOptions): Promise<ServerStatu
                 return resolve(serverStatus);
             }
 
+
             /* 
-                If the handshake and status request were sent out and replied to,
-                generate the ping packet, log the time it was sent out on and send it.
+                If the handshake and status request have been successfully completed,
+                generate the ping packet, record the time it is sent, and then send it.
             */
 
             if (packet.status.handshakeBaked && !packet.status.pingSent) {
@@ -118,7 +119,7 @@ export async function lookup(options?: ServerStatusOptions): Promise<ServerStatu
     // Recommended servers
     mc.setDnsServers(["9.9.9.9", "1.1.1.1", "8.8.8.8"])
     // (Quad9, Cloudflare, Google)
-    // Cloudflare is the fastest for DNS queries in most of the world.
+    // Note: Cloudflare is typically the fastest for DNS queries.
 ```
  */
 export async function setDnsServers(serverArray: Array<string>): Promise<boolean> {
@@ -138,8 +139,8 @@ async function customLookup(hostname: string, options: DynamicObject, callback: 
 
 async function processSRV(hostname: string, port: number) {
     /*
-     *  Tries to get a SRV record from the provided hostname, unless disabled with the disableSRV flag.
-     *  The hostname can't be localhostname, the port always has to be 25565, and the hostname cannot be an IP. 
+     *  Tries to get a SRV record from the provided hostname, unless disabled with the SRVLookup flag.
+     *  The hostname can't be a local one, the port has to always be 25565, and the hostname cannot be an IP. 
     */
 
 

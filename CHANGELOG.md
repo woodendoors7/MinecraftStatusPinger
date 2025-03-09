@@ -1,5 +1,13 @@
 # Changelog!
 
+<h2>v1.2.2</h2>
+
+<sup>[NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.2.2) | [JSR](https://jsr.io/@minecraft/minecraftstatuspinger@1.2.2)</sup>
+
+- 🛠️ Fixed bug from issue [#4](https://github.com/woodendoors7/MinecraftStatusPinger/issues/4) that caused incorrect parsing of status responses from modded servers.
+- ⚙️ Added support for both CommonJS and ES module exports, and updated the module target to ESNext.
+- ⚙️ Bumped the default protocol version from `767` (1.21.1) to `769` (1.21.4)
+
 <h2>v1.2.1</h2>
 
 <sup>[NPM](https://www.npmjs.com/package/minecraftstatuspinger/v/1.2.1) | [JSR](https://jsr.io/@minecraft/minecraftstatuspinger@1.2.1)</sup>

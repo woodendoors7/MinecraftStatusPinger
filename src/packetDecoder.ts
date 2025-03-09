@@ -40,7 +40,7 @@ async function craftData(packet: Packet) {
   // This crafts the first and only data field. It slices off the meta fields.
   packet.fieldsBuffer = packet.dataBuffer.slice(packet.meta.metaLength)
   let fieldLength = varint.decode(packet.fieldsBuffer)
-  packet.fieldsBuffer = packet.fieldsBuffer.slice(varint.encodingLength(fieldLength));
+  packet.fieldsBuffer = packet.fieldsBuffer.slice(varint.encodingLength(fieldLength), fieldLength + varint.encodingLength(fieldLength));
   packet.crafted.data = new TextDecoder().decode(packet.fieldsBuffer); 
   packet.status.handshakeBaked = true;
   return packet;
